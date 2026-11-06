@@ -7,19 +7,24 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
 from sklearn.preprocessing import OneHotEncoder
 
-TIME_COLS = ["weekday", "month", "is_weekend"]  # day of month is added as day / 31
+TIME_COLS_ALL = ["weekday", "month", "hour", "is_weekend", "is_working_hour"]  # day of month is added as day / 31
 
 
 class TfidfLR:
-    """features: 'text', 'text_time' or 'time'. Everything is fitted on train only."""
+    """features: 'text', 'text_time', 'time', or 'text_time_nomonth' (drops month and day of month).
+    Everything is fitted on train only."""
 
     def __init__(self, features: str, Cs=(0.1, 1.0, 10.0), seed: int = 0):
         self.features, self.Cs, self.seed = features, Cs, seed
+        self.nomonth = features.endswith("_nomonth")
 
     def _time(self, df, fit=False):
         if fit:
-            self.enc = OneHotEncoder(handle_unknown="ignore").fit(df[TIME_COLS])
-        oh = self.enc.transform(df[TIME_COLS])
+            self.time_cols = [c for c in TIME_COLS_ALL if c in df.columns and not (self.nomonth and c == "month")]
+            self.enc = OneHotEncoder(handle_unknown="ignore").fit(df[self.time_cols])
+        oh = self.enc.transform(df[self.time_cols])
+        if self.nomonth:
+            return oh.tocsr()
         return sp.hstack([oh, sp.csr_matrix((df.day.values / 31.0)[:, None])]).tocsr()
 
     def _X(self, df, fit=False):
@@ -64,3 +69,21 @@ class Majority:
 
     def predict_proba(self, df):
         return self.model.predict_proba(np.zeros((len(df), 1)))
+
+
+class RandomGuess:
+    """Predicts a uniformly random class. AUPRC and ECE are not meaningful for this baseline."""
+
+    best_C = None
+    val_macro_f1 = None
+
+    def __init__(self, seed: int = 0):
+        self.seed = seed
+
+    def fit(self, train, val):
+        self.k = int(train.y.max()) + 1
+        return self
+
+    def predict_proba(self, df):
+        guess = np.random.default_rng(self.seed).integers(0, self.k, len(df))
+        return np.eye(self.k)[guess]
