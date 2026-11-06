@@ -27,3 +27,6 @@ venv/
 kaggle.json
 
 .DS_Store
+
+# shared contribution log
+!logs/*.csv

@@ -1,0 +1,5 @@
+week,date,member,responsibilities,completed_work,github_links,research_contribution,technical_contribution,challenges,next_step,written_on
+2,2026-09-27,Abhinav Pandey,Topic selection,Proposed topic and anchor paper; drafted project pitch; contributed to feasibility report,,Read Saeed & Ahmed 2025 and checked dataset access,,,Literature review,2026-11-06 (retrospective)
+5,2026-10-09,Abhinav Pandey,Literature review,Reviewed Saeed & Ahmed 2025 and MentalBERT; compiled group literature review report,,Wrote full review of anchor paper,,,Proposal presentation,2026-11-06 (retrospective)
+7,2026-10-22,Abhinav Pandey,Proposal presentation,Worked on Phase I proposal presentation,,,,,Design doc and repo,2026-11-06 (retrospective)
+10,2026-11-06,Abhinav Pandey,Planning and repo setup,Design doc with two milestones; set up GitHub repo with README logs and TODO,https://github.com/Abhinavxox/reddit-mental-health-timing,,Repo structure,,Start Method C after data pipeline,2026-11-06
