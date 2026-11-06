@@ -24,7 +24,7 @@ Each method is trained text-only and text + time, on a random split and on time-
 
 | Member | Role |
 |---|---|
-| Abhinav Pandey | Anchor reimplementation (Method C), timing ablation |
+| Abhinav Pandey | **Team lead.** Project coordination and repo setup, anchor reimplementation (Method C), timing ablation |
 | Sudesh Nimesha | Classical baseline (Method A), statistics toolkit |
 | Jaskamal | Data loading, deduplication, time-based splits |
 | Zohaib Jawaid | MentalRoBERTa fine-tuning (Method B), calibration |
