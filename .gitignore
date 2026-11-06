@@ -1,0 +1,29 @@
+# datasets and large files
+phase1/data/*
+!phase1/data/download_data.sh
+*.csv
+*.parquet
+*.zip
+
+# models and checkpoints
+*.pt
+*.bin
+*.safetensors
+checkpoints/
+outputs/
+
+# paper PDFs (linked in docs/literature/references.md instead)
+papers/
+
+# python / notebooks
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# secrets
+.env
+kaggle.json
+
+.DS_Store
