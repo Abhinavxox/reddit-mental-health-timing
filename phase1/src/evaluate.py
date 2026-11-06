@@ -22,6 +22,7 @@ def evaluate(y_true, y_pred, proba, labels) -> dict:
     idx = list(range(len(labels)))
     out = {
         "macro_f1": f1_score(y_true, y_pred, labels=idx, average="macro", zero_division=0),
+        "weighted_f1": f1_score(y_true, y_pred, labels=idx, average="weighted", zero_division=0),
         "accuracy": accuracy_score(y_true, y_pred),
         "auprc": float(np.mean([average_precision_score(y_true == i, proba[:, i]) for i in idx])),
         "ece": ece(y_true, proba),

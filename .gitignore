@@ -34,3 +34,4 @@ kaggle.json
 # milestone 1 results
 !phase1/results/*.csv
 !phase1/results/*.json
+!phase1/results/**/*.csv
