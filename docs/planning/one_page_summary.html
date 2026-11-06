@@ -1,0 +1,57 @@
+<title>Our Project Idea</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<style>
+:root{--ground:#F5F6F8;--paper:#FFFFFF;--ink:#18212C;--muted:#5B6675;--rule:#DCE0E6;--accent:#2F55A4;
+  --serif:"Newsreader",Georgia,serif;--sans:"IBM Plex Sans",system-ui,-apple-system,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--ground:#11161D;--paper:#18202A;--ink:#E6EAF0;--muted:#98A3B3;--rule:#2A3441;--accent:#8FAEE8}}
+:root[data-theme="dark"]{color-scheme:dark;--ground:#11161D;--paper:#18202A;--ink:#E6EAF0;--muted:#98A3B3;--rule:#2A3441;--accent:#8FAEE8}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:17px/1.6 var(--sans);padding-inline:16px;padding-block:48px 72px}
+main{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1,h2{font-family:var(--serif);font-weight:600;margin:0;line-height:1.2;text-wrap:balance}
+h1{font-size:clamp(1.9rem,5vw,2.5rem)}
+h2{font-size:1.2rem;color:var(--accent)}
+p,ul{margin:0}
+ul{padding-left:20px;display:flex;flex-direction:column;gap:8px}
+a{color:var(--accent)}
+.block{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.muted{color:var(--muted);font-size:.92rem}
+</style>
+<main>
+  <h1>Our project: can AI spot people struggling with mental health from their Reddit posts?</h1>
+
+  <div class="block">
+    <h2>What we'll do</h2>
+    <p>Build and test AI models that read a Reddit post and tell whether it shows signs of depression, anxiety, bipolar disorder, suicidal thoughts and similar conditions. Then, in Phase II, turn the best model into a tool that helps community moderators notice high-risk posts faster.</p>
+  </div>
+
+  <div class="block">
+    <h2>Based on this paper</h2>
+    <p><a href="https://arxiv.org/abs/2503.07653" target="_blank" rel="noopener"><strong>"Early Detection of Mental Health Issues Using Social Media Posts"</strong></a>, Saeed &amp; Ahmed, 2025 (arXiv).</p>
+    <p>They combine the <strong>text of a post</strong> with <strong>when it was posted</strong> (e.g. late at night) and report that the combination works better than text alone.</p>
+  </div>
+
+  <div class="block">
+    <h2>Using this dataset</h2>
+    <p><a href="https://www.kaggle.com/datasets/kamaruladha/mental-disorders-identification-reddit-nlp" target="_blank" rel="noopener"><strong>Mental Disorders Identification (Reddit)</strong></a>, Kaggle: about 700,000 real posts from mental-health subreddits, each with a timestamp. It's the same data the paper used, and it's free.</p>
+    <p class="muted">Backup: the Reddit Mental Health Dataset (Low et al., Zenodo), which is public domain and has posts from before and during COVID.</p>
+  </div>
+
+  <div class="block">
+    <h2>Our twist (the research question)</h2>
+    <p>The paper's improvement is tiny (F1 0.74 vs 0.72), and it was never compared with modern AI models. We'll check whether posting time <em>really</em> helps, and whether the models still work on newer posts.</p>
+  </div>
+
+  <div class="block">
+    <h2>Why we should pick this</h2>
+    <ul>
+      <li><strong>It helps people.</strong> About 280M people live with depression, and suicide kills about 727,000 a year (WHO). Many talk about it online before they talk to anyone else.</li>
+      <li><strong>It fits the course perfectly.</strong> The paper has no code, so we reimplement it ourselves, which is exactly what the reproduction requirement asks for.</li>
+      <li><strong>The research finding is built in.</strong> Whatever we find about the paper's claim is a real result.</li>
+      <li><strong>It's easy to run.</strong> The data is free and it runs on Google Colab, with no paid APIs.</li>
+      <li><strong>Phase II is clear:</strong> a moderator triage assistant built on the best model.</li>
+    </ul>
+  </div>
+
+  <p class="muted">Full details (papers, plan, roles, risks) are in the longer project pitch.</p>
+</main>

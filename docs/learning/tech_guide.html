@@ -1,0 +1,425 @@
+<title>Project Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F5F6F8;--paper:#FFFFFF;--ink:#18212C;--muted:#5B6675;--rule:#DCE0E6;
+  --accent:#2F55A4;--accent-soft:#E6ECF7;--signal:#B86E00;--signal-soft:#FBF0DE;
+  --code-bg:#1B2330;--code-ink:#E3E8F0;--code-dim:#8C98AA;--code-key:#9DB8F2;--code-str:#E7B872;
+  --serif:"Newsreader",Georgia,serif;--sans:"IBM Plex Sans",system-ui,-apple-system,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--ground:#11161D;--paper:#18202A;--ink:#E6EAF0;--muted:#98A3B3;--rule:#2A3441;--accent:#8FAEE8;--accent-soft:#1D2A40;--signal:#F0B455;--signal-soft:#33280F;--code-bg:#0C1117}}
+:root[data-theme="dark"]{color-scheme:dark;--ground:#11161D;--paper:#18202A;--ink:#E6EAF0;--muted:#98A3B3;--rule:#2A3441;--accent:#8FAEE8;--accent-soft:#1D2A40;--signal:#F0B455;--signal-soft:#33280F;--code-bg:#0C1117}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:16px/1.65 var(--sans);padding-inline:16px;padding-block:40px 96px}
+main{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:64px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;margin:0;line-height:1.2;text-wrap:balance}
+h1{font-size:clamp(2rem,6vw,2.9rem)}
+h2{font-size:1.75rem}
+h3{font-size:1.15rem}
+p,ul,ol{margin:0}
+ul,ol{padding-left:22px;display:flex;flex-direction:column;gap:6px}
+a{color:var(--accent)}
+a:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+code{font:.88em var(--mono);background:var(--accent-soft);color:var(--accent);padding:1px 5px;border-radius:4px}
+.eyebrow{font:500 .74rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.12rem;color:var(--muted);max-width:62ch}
+header{display:flex;flex-direction:column;gap:14px}
+section{display:flex;flex-direction:column;gap:18px;scroll-margin-top:16px}
+.stagehead{display:flex;gap:14px;align-items:baseline}
+.stagenum{font:600 2.2rem/1 var(--serif);color:var(--accent);min-width:1.4em}
+.stagehead .sub{color:var(--muted);font-size:.95rem;margin-top:4px}
+pre{margin:0;background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:16px 18px;overflow-x:auto;font:13.5px/1.6 var(--mono);tab-size:4}
+pre .c{color:var(--code-dim)}pre .k{color:var(--code-key)}pre .s{color:var(--code-str)}
+.note{background:var(--accent-soft);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.note b{font-size:.8rem;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.warn{background:var(--signal-soft)}
+.warn b{color:var(--signal)}
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 .72rem/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:none}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 20px;padding:18px 20px;background:var(--paper);border:1px solid var(--rule);border-radius:10px;list-style:none;margin:0;counter-reset:t}
+.toc li{counter-increment:t;display:flex;gap:10px;font-size:.95rem}
+.toc li::before{content:counter(t);font:600 .95rem/1.5 var(--serif);color:var(--accent);min-width:1.2em}
+.toc a{color:var(--ink);text-decoration:none}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+.pipe{overflow-x:auto;background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:16px}
+.pipe svg{display:block;min-width:680px;width:100%;height:auto}
+.pipe text{font-family:var(--sans);fill:var(--ink)}
+.pipe .lbl{font-size:12px;fill:var(--muted)}
+.pipe .box{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+.pipe .boxb{fill:var(--signal-soft);stroke:var(--signal);stroke-width:1.2}
+.pipe .ln{stroke:var(--muted);stroke-width:1.4;fill:none}
+.pipe .ah{fill:var(--muted)}
+.demo{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.demo label{display:flex;flex-direction:column;gap:4px;font-size:.9rem}
+.demo input[type=range]{width:100%;accent-color:var(--accent)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.meter{display:flex;height:34px;border-radius:6px;overflow:hidden;font:500 .82rem/34px var(--mono)}
+.meter div{padding:0 10px;white-space:nowrap;overflow:hidden;color:#fff;transition:width .2s}
+.m1{background:var(--accent)}.m2{background:var(--signal)}
+.readout{font:13px/1.6 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.glossary{display:grid;grid-template-columns:max-content 1fr;gap:8px 18px}
+.glossary dt{font-weight:600}
+.glossary dd{margin:0;color:var(--muted)}
+@media (max-width:560px){.split{grid-template-columns:1fr}.glossary{grid-template-columns:1fr}.glossary dd{margin-bottom:6px}}
+@media (prefers-reduced-motion:reduce){.meter div{transition:none}}
+</style>
+
+<main>
+
+<header>
+  <span class="eyebrow">COMP 8790 · Does Timing Matter? · Team guide</span>
+  <h1>From raw Reddit posts to a working triage tool</h1>
+  <p class="lede">Every technology in our project, in the order we'll actually use it. Each stage says what the tool is, why we need it, and shows real code on our data.</p>
+</header>
+
+<section>
+  <span class="eyebrow">The whole thing on one page</span>
+  <div class="pipe">
+    <svg viewBox="0 0 720 250" role="img" aria-label="Pipeline: data, cleaning and splitting, three models, experiments, Phase II triage tool">
+      <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="ah"/></marker></defs>
+      <rect x="8" y="95" width="110" height="60" rx="8" class="box"/><text x="63" y="121" text-anchor="middle" font-size="14" font-weight="600">Reddit data</text><text x="63" y="140" text-anchor="middle" class="lbl">Kaggle · Zenodo</text>
+      <rect x="148" y="95" width="120" height="60" rx="8" class="box"/><text x="208" y="121" text-anchor="middle" font-size="14" font-weight="600">Clean + split</text><text x="208" y="140" text-anchor="middle" class="lbl">pandas</text>
+      <rect x="300" y="20" width="150" height="54" rx="8" class="box"/><text x="375" y="43" text-anchor="middle" font-size="13" font-weight="600">A · TF-IDF + LogReg</text><text x="375" y="61" text-anchor="middle" class="lbl">scikit-learn</text>
+      <rect x="300" y="98" width="150" height="54" rx="8" class="box"/><text x="375" y="121" text-anchor="middle" font-size="13" font-weight="600">B · MentalRoBERTa</text><text x="375" y="139" text-anchor="middle" class="lbl">Hugging Face</text>
+      <rect x="300" y="176" width="150" height="54" rx="8" class="box"/><text x="375" y="199" text-anchor="middle" font-size="13" font-weight="600">C · BiLSTM + attention</text><text x="375" y="217" text-anchor="middle" class="lbl">PyTorch</text>
+      <rect x="482" y="95" width="100" height="60" rx="8" class="box"/><text x="532" y="121" text-anchor="middle" font-size="14" font-weight="600">Evaluate</text><text x="532" y="140" text-anchor="middle" class="lbl">F1 · CI · shift</text>
+      <rect x="610" y="95" width="102" height="60" rx="8" class="boxb"/><text x="661" y="121" text-anchor="middle" font-size="14" font-weight="600">Phase II</text><text x="661" y="140" text-anchor="middle" class="lbl">triage tool</text>
+      <path d="M118,125H144" class="ln" marker-end="url(#a)"/>
+      <path d="M268,125C284,125 284,47 296,47" class="ln" marker-end="url(#a)"/>
+      <path d="M268,125H296" class="ln" marker-end="url(#a)"/>
+      <path d="M268,125C284,125 284,203 296,203" class="ln" marker-end="url(#a)"/>
+      <path d="M450,47C466,47 466,125 478,125" class="ln" marker-end="url(#a)"/>
+      <path d="M450,125H478" class="ln" marker-end="url(#a)"/>
+      <path d="M450,203C466,203 466,125 478,125" class="ln" marker-end="url(#a)"/>
+      <path d="M582,125H606" class="ln" marker-end="url(#a)"/>
+    </svg>
+  </div>
+  <ol class="toc">
+    <li><a href="#setup">Workspace: Colab, GitHub, Overleaf</a></li>
+    <li><a href="#data">Loading and cleaning with pandas</a></li>
+    <li><a href="#split">Splitting without cheating</a></li>
+    <li><a href="#tfidf">Method A: TF-IDF + logistic regression</a></li>
+    <li><a href="#metrics">Metrics: why accuracy lies</a></li>
+    <li><a href="#lstm">Method C: BiLSTM + cross-modal attention</a></li>
+    <li><a href="#bert">Method B: transformers and MentalRoBERTa</a></li>
+    <li><a href="#experiments">Experiments that prove something</a></li>
+    <li><a href="#trust">Calibration and explanations</a></li>
+    <li><a href="#phase2">Phase II: the triage tool</a></li>
+  </ol>
+</section>
+
+<section id="setup">
+  <div class="stagehead"><span class="stagenum">1</span><div><h2>Workspace</h2><p class="sub">Where the code runs, where it lives, where the paper gets written</p></div></div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Tool</th><th>What it is</th><th>What we use it for</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Python 3.11</strong></td><td>The language all ML libraries speak</td><td>Everything</td></tr>
+      <tr><td><strong>Google Colab</strong></td><td>Free Jupyter notebooks with a GPU (T4)</td><td>Training models B and C. <em>Runtime → Change runtime type → T4 GPU</em></td></tr>
+      <tr><td><strong>GitHub</strong></td><td>Shared code history</td><td>The course requires a repo with <code>phase1/</code> and <code>phase2/</code> kept separate</td></tr>
+      <tr><td><strong>Overleaf</strong></td><td>Online LaTeX editor</td><td>The conference-style report (they want LaTeX + PDF)</td></tr>
+    </tbody>
+  </table></div>
+<pre><span class="c"># repo layout we'll use</span>
+phase1/
+  data/          <span class="c"># download_data.sh, never commit the CSVs</span>
+  src/           <span class="c"># prepare.py, tfidf_lr.py, bilstm_attn.py, finetune_roberta.py</span>
+  experiments/   <span class="c"># ablation.py, shift.py, bootstrap.py</span>
+  results/       <span class="c"># one CSV per run: model, seed, split, macro_f1, ...</span>
+phase2/
+  api/  ui/
+requirements.txt
+README.md</pre>
+<pre><span class="c"># first cell of every Colab notebook</span>
+!git clone https://github.com/&lt;our-team&gt;/timing-matters.git
+%cd timing-matters
+!pip install -q -r requirements.txt   <span class="c"># pandas scikit-learn torch transformers datasets fastapi streamlit</span></pre>
+</section>
+
+<section id="data">
+  <div class="stagehead"><span class="stagenum">2</span><div><h2>Loading and cleaning with pandas</h2><p class="sub">pandas = spreadsheets in Python. One row per post, one column per field.</p></div></div>
+  <p>The Kaggle dataset has the columns <code>title</code>, <code>selftext</code>, <code>created_utc</code>, <code>over_18</code> and <code>subreddit</code>. The subreddit is our label: a post in r/depression gets the label "depression". <code>created_utc</code> is a Unix timestamp (seconds since 1970), which is where the "timing" features come from.</p>
+<pre><span class="k">import</span> pandas <span class="k">as</span> pd
+
+df = pd.read_csv(<span class="s">"data/mental_disorders_reddit.csv"</span>)   <span class="c"># exact filename may differ after unzipping</span>
+
+<span class="c"># 1. one text field, like the paper does</span>
+df[<span class="s">"text"</span>] = df.title.fillna(<span class="s">""</span>) + <span class="s">" "</span> + df.selftext.fillna(<span class="s">""</span>)
+
+<span class="c"># 2. drop junk: removed/deleted posts, NSFW (the paper drops these too), duplicates</span>
+df = df[~df.selftext.isin([<span class="s">"[removed]"</span>, <span class="s">"[deleted]"</span>])]
+df = df[df.over_18 == <span class="k">False</span>]
+df = df.drop_duplicates(<span class="s">"text"</span>)
+
+<span class="c"># 3. timing features from the timestamp</span>
+ts = pd.to_datetime(df.created_utc, unit=<span class="s">"s"</span>)
+df[<span class="s">"hour"</span>]    = ts.dt.hour          <span class="c"># 0–23: late-night posting?</span>
+df[<span class="s">"weekday"</span>] = ts.dt.weekday       <span class="c"># 0 = Monday</span>
+df[<span class="s">"month"</span>]   = ts.dt.month
+df[<span class="s">"is_weekend"</span>] = df.weekday &gt;= 5
+df[<span class="s">"year"</span>]    = ts.dt.year
+
+print(df.subreddit.value_counts())      <span class="c"># ALWAYS look at class balance first</span></pre>
+  <div class="note warn"><b>Leak to watch for</b><p>Posts often say the subreddit's name ("hi r/depression…"). A model that learns that word isn't detecting depression, it's reading the label. Strip subreddit names from the text: <code>df.text.str.replace(r"r/\w+", "", regex=True)</code>.</p></div>
+</section>
+
+<section id="split">
+  <div class="stagehead"><span class="stagenum">3</span><div><h2>Splitting without cheating</h2><p class="sub">The single most important step for honest results</p></div></div>
+  <p>We train on one part of the data and test on a part the model has never seen. <strong>How</strong> we split decides what the result means:</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Split</th><th>How</th><th>What it tests</th></tr></thead>
+    <tbody>
+      <tr><td>Random (stratified)</td><td>Shuffle, keep 80% for train, 20% for test, class ratios kept</td><td>What the paper did. Used for the reproduction.</td></tr>
+      <tr><td>Temporal</td><td>Train on 2021 posts, test on 2022 posts</td><td>Does the model survive time? <strong>Our research question.</strong></td></tr>
+      <tr><td>Pre → mid COVID</td><td>Zenodo "pre" files for training, "post" files for testing</td><td>Survival across a big real-world shift</td></tr>
+    </tbody>
+  </table></div>
+<pre><span class="k">from</span> sklearn.model_selection <span class="k">import</span> train_test_split
+
+<span class="c"># random split (reproduction)</span>
+train, test = train_test_split(df, test_size=<span class="s">0.2</span>, stratify=df.subreddit, random_state=<span class="s">42</span>)
+
+<span class="c"># temporal split (our experiment)</span>
+train_t = df[df.year == <span class="s">2021</span>]
+test_t  = df[df.year == <span class="s">2022</span>]</pre>
+  <div class="note"><b>Rule</b><p>Anything that <em>learns</em> from data (vocabulary, TF-IDF weights, scalers) is fitted on the <strong>training</strong> set only, then applied to the test set. Fitting on everything leaks test information into training.</p></div>
+</section>
+
+<section id="tfidf">
+  <div class="stagehead"><span class="stagenum">4</span><div><h2>Method A: TF-IDF + logistic regression</h2><p class="sub">The classical baseline. Fast, strong and explainable.</p></div></div>
+  <h3>TF-IDF: turning words into numbers</h3>
+  <p>A model can't read, so each post becomes a long vector with one number per word. <strong>TF</strong> (term frequency) is how often the word appears in this post. <strong>IDF</strong> (inverse document frequency) is how rare the word is across all posts. Common words like "feel" get low weight and distinctive words like "anxious" get high weight.</p>
+  <p>Worked example with 3 tiny posts. scikit-learn's formula is <code>idf = ln((1+n)/(1+df)) + 1</code>, where n is the number of posts and df is how many posts contain the word:</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Word</th><th>Appears in</th><th class="n">df</th><th class="n">IDF</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>feel</td><td>all 3 posts</td><td class="n">3</td><td class="n">1.000</td><td>says nothing about which class</td></tr>
+      <tr><td>alone</td><td>posts 1, 3</td><td class="n">2</td><td class="n">1.288</td><td>somewhat informative</td></tr>
+      <tr><td>anxious</td><td>post 2 only</td><td class="n">1</td><td class="n">1.693</td><td>very informative</td></tr>
+    </tbody>
+  </table></div>
+  <p class="readout">Post 1: "i feel so tired and alone"<br>Post 2: "i feel anxious before exams"<br>Post 3: "cant sleep feel alone again"</p>
+  <h3>Logistic regression: the classifier</h3>
+  <p>For each class the model learns one weight per word. It sums the weights of the words in a post to get a score per class, and <em>softmax</em> turns those scores into probabilities that add up to 1. Because every weight belongs to a word, we can print the top words per class, which gives us a free explanation.</p>
+<pre><span class="k">from</span> sklearn.feature_extraction.text <span class="k">import</span> TfidfVectorizer
+<span class="k">from</span> sklearn.linear_model <span class="k">import</span> LogisticRegression
+<span class="k">from</span> sklearn.metrics <span class="k">import</span> f1_score, classification_report
+
+vec = TfidfVectorizer(max_features=<span class="s">50_000</span>, ngram_range=(<span class="s">1</span>, <span class="s">2</span>), min_df=<span class="s">3</span>, sublinear_tf=<span class="k">True</span>)
+X_train = vec.fit_transform(train.text)     <span class="c"># fit = learn vocabulary + IDF, on TRAIN only</span>
+X_test  = vec.transform(test.text)          <span class="c"># transform only</span>
+
+clf = LogisticRegression(max_iter=<span class="s">2000</span>, class_weight=<span class="s">"balanced"</span>)
+clf.fit(X_train, train.subreddit)
+pred = clf.predict(X_test)
+
+print(<span class="s">"macro-F1:"</span>, f1_score(test.subreddit, pred, average=<span class="s">"macro"</span>))
+print(classification_report(test.subreddit, pred))
+
+<span class="c"># free explanation: strongest words for each class</span>
+words = vec.get_feature_names_out()
+<span class="k">for</span> i, cls <span class="k">in</span> enumerate(clf.classes_):
+    print(cls, words[clf.coef_[i].argsort()[-10:]])</pre>
+  <p>This runs in minutes on a laptop. If a fancy model can't beat it clearly, that's a finding.</p>
+</section>
+
+<section id="metrics">
+  <div class="stagehead"><span class="stagenum">5</span><div><h2>Metrics: why accuracy lies</h2><p class="sub">How we score every model, the same way every time</p></div></div>
+  <p>Say we have 100 posts and 10 are truly high-risk. The model flags 8 posts, and 6 of those are correct.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Metric</th><th>Question it answers</th><th>Formula</th><th class="n">Value</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Precision</strong></td><td>Of the posts we flagged, how many were right?</td><td>6 / 8</td><td class="n">0.75</td></tr>
+      <tr><td><strong>Recall</strong></td><td>Of the at-risk posts, how many did we catch?</td><td>6 / 10</td><td class="n">0.60</td></tr>
+      <tr><td><strong>F1</strong></td><td>Balance of the two (harmonic mean)</td><td>2·P·R / (P+R)</td><td class="n">0.667</td></tr>
+      <tr><td><strong>Accuracy</strong></td><td>Share of all posts labelled correctly</td><td>(6 + 88) / 100</td><td class="n">0.94</td></tr>
+    </tbody>
+  </table></div>
+  <p>Accuracy says 94% while we <strong>missed 4 of the 10 people at risk</strong>. That's why we report <strong>macro-F1</strong> (F1 averaged over classes, so small classes count equally) and <strong>recall on high-risk classes</strong>. The paper headlines accuracy; we won't.</p>
+  <p>A <strong>confusion matrix</strong> shows which classes get mixed up. The paper found anxiety and BPD confused, and we'll check whether that holds.</p>
+</section>
+
+<section id="lstm">
+  <div class="stagehead"><span class="stagenum">6</span><div><h2>Method C: BiLSTM + cross-modal attention</h2><p class="sub">The paper we're reimplementing, built from scratch in PyTorch</p></div></div>
+  <h3>The pieces</h3>
+  <dl class="glossary">
+    <dt>Word embedding</dt><dd>Each word becomes a learned vector of 128 numbers. Similar words ("sad", "down") end up with similar vectors.</dd>
+    <dt>LSTM</dt><dd>Reads words one at a time and carries a memory. Its gates (forget, input and output, the paper's equations 6–10) decide what to keep and what to drop.</dd>
+    <dt>BiLSTM</dt><dd>Two LSTMs, one reading left to right and one right to left, with their outputs joined. "not happy" is understood from both sides.</dd>
+    <dt>Max-pooling</dt><dd>Keeps the strongest signal per dimension across all words. This gives one vector for the whole post (<code>z_text</code>).</dd>
+    <dt>Temporal branch</dt><dd>A small LSTM over the 6 timing features (month, day, hour, weekday, is_working_hour, is_weekend), producing <code>z_time</code>.</dd>
+    <dt>Cross-modal attention</dt><dd>Learns how much to trust text vs. timing <em>for each post</em>, then mixes the two vectors with those weights.</dd>
+  </dl>
+  <h3>Attention, by hand</h3>
+  <p>The paper's equations 11–12 give each branch a relevance score s = wᵀ·tanh(W·z + b), and then α = eˢ divided by the sum of both eˢ. That's just a two-way softmax. Move the sliders:</p>
+  <div class="demo">
+    <div class="split">
+      <label for="st">Text relevance score s<sub>text</sub>: <span id="stv">2.0</span><input id="st" type="range" min="-3" max="3" step="0.1" value="2"></label>
+      <label for="sm">Timing relevance score s<sub>time</sub>: <span id="smv">0.5</span><input id="sm" type="range" min="-3" max="3" step="0.1" value="0.5"></label>
+    </div>
+    <div class="meter" aria-live="polite"><div class="m1" id="bt">text 81.8%</div><div class="m2" id="bm">time 18.2%</div></div>
+    <p class="readout" id="calc">α_text = e^2.0 / (e^2.0 + e^0.5) = 7.389 / 9.038 = 0.818 → z_fused = 0.818·z_text + 0.182·z_time</p>
+  </div>
+  <p>Our experiment logs these α values. If α<sub>time</sub> is always tiny, the model is effectively ignoring timing, and that's evidence for our research question.</p>
+  <h3>The model in PyTorch</h3>
+<pre><span class="k">import</span> torch, torch.nn <span class="k">as</span> nn
+
+<span class="k">class</span> CrossModal(nn.Module):
+    <span class="k">def</span> __init__(self, vocab_size, n_classes, emb=<span class="s">128</span>, h=<span class="s">64</span>):
+        super().__init__()
+        self.emb      = nn.Embedding(vocab_size, emb, padding_idx=<span class="s">0</span>)
+        self.text_rnn = nn.LSTM(emb, h, batch_first=<span class="k">True</span>, bidirectional=<span class="k">True</span>)  <span class="c"># → 2h</span>
+        self.time_rnn = nn.LSTM(<span class="s">1</span>, h, batch_first=<span class="k">True</span>)                     <span class="c"># 6 features as a length-6 sequence</span>
+        self.time_up  = nn.Linear(h, <span class="s">2</span> * h)     <span class="c"># paper doesn't say how sizes match: our documented choice</span>
+        self.W_text, self.W_time = nn.Linear(<span class="s">2</span>*h, <span class="s">2</span>*h), nn.Linear(<span class="s">2</span>*h, <span class="s">2</span>*h)
+        self.w    = nn.Linear(<span class="s">2</span> * h, <span class="s">1</span>, bias=<span class="k">False</span>)  <span class="c"># shared w in eq. 11–12</span>
+        self.drop = nn.Dropout(<span class="s">0.6</span>)
+        self.out  = nn.Linear(<span class="s">2</span> * h, n_classes)
+
+    <span class="k">def</span> forward(self, tokens, time_feats):          <span class="c"># tokens: [B,100] ids, time_feats: [B,6] scaled 0–1</span>
+        H, _   = self.text_rnn(self.emb(tokens))
+        z_text = H.max(dim=<span class="s">1</span>).values                  <span class="c"># eq. 4 max-pool</span>
+        _, (h_n, _) = self.time_rnn(time_feats.unsqueeze(-<span class="s">1</span>))
+        z_time = self.time_up(h_n[-<span class="s">1</span>])
+        s = torch.cat([self.w(torch.tanh(self.W_text(z_text))),
+                       self.w(torch.tanh(self.W_time(z_time)))], dim=<span class="s">1</span>)
+        alpha = torch.softmax(s, dim=<span class="s">1</span>)              <span class="c"># eq. 11–12</span>
+        z = alpha[:, :<span class="s">1</span>] * z_text + alpha[:, <span class="s">1</span>:] * z_time
+        <span class="k">return</span> self.out(self.drop(z)), alpha
+
+<span class="c"># paper's settings: vocab 10k, 100 tokens, RMSprop lr 5e-4, dropout 0.6, weight decay 1e-5, batch 64, 30 epochs</span>
+model = CrossModal(vocab_size=<span class="s">10_000</span>, n_classes=<span class="s">6</span>)
+opt = torch.optim.RMSprop(model.parameters(), lr=<span class="s">5e-4</span>, alpha=<span class="s">0.99</span>, momentum=<span class="s">0.9</span>, weight_decay=<span class="s">1e-5</span>)
+loss_fn = nn.CrossEntropyLoss()</pre>
+  <div class="note"><b>Reproduction tip</b><p>The paper leaves gaps: how the branch sizes match, and what "LSTM over temporal features" means exactly. Write down every choice we make. The course explicitly wants "differences between reported and reproduced results and possible explanations", and these gaps are those explanations.</p></div>
+  <p><strong>Ablation:</strong> the same model with the time branch removed gives "text-only C". Comparing C with text-only C is the cleanest test of whether timing helps.</p>
+</section>
+
+<section id="bert">
+  <div class="stagehead"><span class="stagenum">7</span><div><h2>Method B: transformers and MentalRoBERTa</h2><p class="sub">The modern baseline the paper skipped</p></div></div>
+  <p>A <strong>transformer</strong> reads the whole post at once and uses <em>self-attention</em>: every word looks at every other word to work out its meaning in context. "I'm fine" after a long description of hopelessness reads differently than on its own.</p>
+  <p><strong>Pretraining + fine-tuning:</strong> RoBERTa has already read billions of words and "knows English". <strong>MentalRoBERTa</strong> is RoBERTa that was trained further on mental-health Reddit (Ji et al., 2022, one of our core papers). We only <em>fine-tune</em> it: add a small classification layer and train briefly on our labels. That's why it's strong even with modest data.</p>
+<pre><span class="k">from</span> transformers <span class="k">import</span> AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer
+<span class="k">from</span> datasets <span class="k">import</span> Dataset
+
+name = <span class="s">"mental/mental-roberta-base"</span>     <span class="c"># gated: accept terms on its HF page, then run huggingface-cli login</span>
+labels = sorted(train.subreddit.unique()); lid = {l: i <span class="k">for</span> i, l <span class="k">in</span> enumerate(labels)}
+
+tok   = AutoTokenizer.from_pretrained(name)
+model = AutoModelForSequenceClassification.from_pretrained(name, num_labels=len(labels))
+
+<span class="k">def</span> to_ds(frame):
+    d = Dataset.from_dict({<span class="s">"text"</span>: frame.text.tolist(), <span class="s">"label"</span>: frame.subreddit.map(lid).tolist()})
+    <span class="k">return</span> d.map(<span class="k">lambda</span> b: tok(b[<span class="s">"text"</span>], truncation=<span class="k">True</span>, max_length=<span class="s">256</span>), batched=<span class="k">True</span>)
+
+train_s = train.groupby(<span class="s">"subreddit"</span>).sample(n=<span class="s">10_000</span>, random_state=<span class="s">42</span>)   <span class="c"># subsample: 700k is too much for a free T4</span>
+args = TrainingArguments(<span class="s">"out"</span>, learning_rate=<span class="s">2e-5</span>, per_device_train_batch_size=<span class="s">16</span>,
+                         num_train_epochs=<span class="s">2</span>, fp16=<span class="k">True</span>, eval_strategy=<span class="s">"epoch"</span>, seed=<span class="s">42</span>)
+trainer = Trainer(model=model, args=args, train_dataset=to_ds(train_s),
+                  eval_dataset=to_ds(test), processing_class=tok)
+trainer.train()</pre>
+  <div class="note warn"><b>Compute reality</b><p>On a free Colab T4, 60k posts × 2 epochs takes roughly 1–2 hours. Save checkpoints to Google Drive, because Colab sessions disconnect. Use the same subsample for all three methods so the comparison is fair.</p></div>
+</section>
+
+<section id="experiments">
+  <div class="stagehead"><span class="stagenum">8</span><div><h2>Experiments that prove something</h2><p class="sub">Turning "our model got 0.74" into a real finding</p></div></div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Experiment</th><th>What we run</th><th>What it answers</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Reproduction</strong></td><td>A, B, C on the paper's random split</td><td>Can we get the paper's 0.7376 F1? If not, why not?</td></tr>
+      <tr><td><strong>Timing ablation</strong></td><td>Each model with vs. without timing features</td><td>Does timing actually help?</td></tr>
+      <tr><td><strong>Time shift</strong></td><td>Train 2021 → test 2022; pre-COVID → mid-COVID</td><td>Which model survives change?</td></tr>
+      <tr><td><strong>Seeds</strong></td><td>Every run × 5 random seeds</td><td>Is a gain real or luck?</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Bootstrap confidence intervals</h3>
+  <p>Is +0.015 F1 real? Resample the test set with replacement 1,000 times and recompute the difference each time. If the middle 95% of those differences excludes 0, the gain is real at the 95% level. If it includes 0, we can't claim it.</p>
+<pre><span class="k">import</span> numpy <span class="k">as</span> np
+<span class="k">from</span> sklearn.metrics <span class="k">import</span> f1_score
+
+<span class="k">def</span> bootstrap_diff(y, pred_a, pred_b, n=<span class="s">1000</span>, seed=<span class="s">0</span>):
+    rng, N, diffs = np.random.default_rng(seed), len(y), []
+    <span class="k">for</span> _ <span class="k">in</span> range(n):
+        i = rng.integers(<span class="s">0</span>, N, N)                        <span class="c"># resample test posts</span>
+        diffs.append(f1_score(y[i], pred_a[i], average=<span class="s">"macro"</span>)
+                   - f1_score(y[i], pred_b[i], average=<span class="s">"macro"</span>))
+    <span class="k">return</span> np.percentile(diffs, [<span class="s">2.5</span>, <span class="s">97.5</span>])
+
+lo, hi = bootstrap_diff(y_test, pred_with_time, pred_text_only)
+print(<span class="s">f"timing adds between {lo:+.3f} and {hi:+.3f} macro-F1"</span>)</pre>
+  <p>That printed line is exactly the kind of evidence-based finding the course wants: <em>"Timing adds −0.004 to +0.011 F1: not significant."</em></p>
+</section>
+
+<section id="trust">
+  <div class="stagehead"><span class="stagenum">9</span><div><h2>Calibration and explanations</h2><p class="sub">Can a moderator trust the number and see why?</p></div></div>
+  <p><strong>Calibration:</strong> if the model says "80% suicidal" on 100 posts, about 80 of them should really be. We measure this with <strong>ECE</strong> (expected calibration error). Group predictions by confidence, compare average confidence with actual accuracy in each group, and average the gaps. Transformers are often overconfident, and <em>temperature scaling</em> (dividing the scores by one learned number) fixes most of it.</p>
+  <p><strong>Explanations:</strong></p>
+  <ul>
+    <li><strong>Method A:</strong> word weights (shown in stage 4).</li>
+    <li><strong>Method C:</strong> the α values say whether text or timing drove the decision.</li>
+    <li><strong>Method B:</strong> <em>SHAP</em> or <em>Integrated Gradients</em> highlight which words pushed the prediction.</li>
+  </ul>
+  <p>The course's Phase II report requires a responsible-AI section: fairness, privacy, explainability and failure cases. This is where that material comes from.</p>
+</section>
+
+<section id="phase2">
+  <div class="stagehead"><span class="stagenum">10</span><div><h2>Phase II: the triage tool</h2><p class="sub">The best Phase I model, wrapped for real use</p></div></div>
+  <p>Two small pieces: a <strong>FastAPI</strong> service that loads the model and scores a post, and a <strong>Streamlit</strong> page where a moderator sees a queue sorted by risk.</p>
+<pre><span class="c"># phase2/api/main.py</span>
+<span class="k">from</span> fastapi <span class="k">import</span> FastAPI
+<span class="k">from</span> pydantic <span class="k">import</span> BaseModel
+app = FastAPI()
+model = load_best_model()                     <span class="c"># whichever Phase I showed most reliable</span>
+
+<span class="k">class</span> Post(BaseModel):
+    text: str
+    created_utc: int
+
+@app.post(<span class="s">"/score"</span>)
+<span class="k">def</span> score(p: Post):
+    probs, top_words = model.predict_explain(p.text, p.created_utc)
+    <span class="k">return</span> {<span class="s">"probs"</span>: probs, <span class="s">"evidence"</span>: top_words, <span class="s">"needs_review"</span>: probs[<span class="s">"suicidewatch"</span>] &gt; <span class="s">0.5</span>}</pre>
+<pre><span class="c"># phase2/ui/app.py</span>
+<span class="k">import</span> streamlit <span class="k">as</span> st, requests
+st.title(<span class="s">"Moderator queue"</span>)
+<span class="k">for</span> post <span class="k">in</span> sorted(incoming_posts(), key=risk, reverse=<span class="k">True</span>):
+    r = requests.post(<span class="s">"http://localhost:8000/score"</span>, json=post).json()
+    <span class="k">with</span> st.expander(<span class="s">f"{max(r['probs'].values()):.0%} · {post['text'][:80]}…"</span>):
+        st.write(<span class="s">"Why flagged:"</span>, r[<span class="s">"evidence"</span>])
+        st.info(<span class="s">"Human decision required. Crisis resources: …"</span>)</pre>
+  <p>We evaluate it against the Phase I TF-IDF baseline: does the tool put truly high-risk posts near the top of the queue (<em>recall@k</em>)? And how fast is it per post?</p>
+</section>
+
+<section>
+  <span class="eyebrow">Start here</span>
+  <h2>This week, in order</h2>
+  <ol>
+    <li>Everyone makes a Kaggle account and a Hugging Face account, and accepts the MentalRoBERTa terms.</li>
+    <li>One person creates the GitHub repo with the layout from stage 1.</li>
+    <li>Run stage 2 on the Kaggle data and share the class counts and the posts-per-year chart.</li>
+    <li>Run Method A on the random split. That's our first number, and every later method gets compared to it.</li>
+  </ol>
+</section>
+
+</main>
+
+<script>
+(function(){
+  var st=document.getElementById('st'),sm=document.getElementById('sm');
+  function upd(){
+    var a=+st.value,b=+sm.value,ea=Math.exp(a),eb=Math.exp(b),at=ea/(ea+eb),am=1-at;
+    document.getElementById('stv').textContent=a.toFixed(1);
+    document.getElementById('smv').textContent=b.toFixed(1);
+    var bt=document.getElementById('bt'),bm=document.getElementById('bm');
+    bt.style.width=(at*100)+'%';bm.style.width=(am*100)+'%';
+    bt.textContent='text '+(at*100).toFixed(1)+'%';bm.textContent='time '+(am*100).toFixed(1)+'%';
+    document.getElementById('calc').textContent='α_text = e^'+a.toFixed(1)+' / (e^'+a.toFixed(1)+' + e^'+b.toFixed(1)+') = '+ea.toFixed(3)+' / '+(ea+eb).toFixed(3)+' = '+at.toFixed(3)+' → z_fused = '+at.toFixed(3)+'·z_text + '+am.toFixed(3)+'·z_time';
+  }
+  st.addEventListener('input',upd);sm.addEventListener('input',upd);upd();
+})();
+</script>

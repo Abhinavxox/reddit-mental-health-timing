@@ -1,0 +1,298 @@
+<title>Does Timing Matter?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F5F6F8; --paper:#FFFFFF; --ink:#18212C; --muted:#5B6675; --rule:#DCE0E6;
+  --accent:#2F55A4; --accent-soft:#E6ECF7; --signal:#B86E00; --signal-soft:#FBF0DE; --good:#2E7D5B;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--ground:#11161D;--paper:#18202A;--ink:#E6EAF0;--muted:#98A3B3;--rule:#2A3441;
+  --accent:#8FAEE8;--accent-soft:#1D2A40;--signal:#F0B455;--signal-soft:#33280F;--good:#6CC59C;}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--ground:#11161D;--paper:#18202A;--ink:#E6EAF0;--muted:#98A3B3;--rule:#2A3441;
+  --accent:#8FAEE8;--accent-soft:#1D2A40;--signal:#F0B455;--signal-soft:#33280F;--good:#6CC59C;}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:16px/1.6 var(--sans);padding-inline:16px;padding-block:40px 80px}
+main{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(2.1rem,6vw,3.1rem);letter-spacing:-.01em}
+h2{font-size:1.65rem}
+h3{font-size:1.15rem}
+p{margin:0}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font:500 .75rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+section{display:flex;flex-direction:column;gap:18px}
+.lede{font-size:1.15rem;color:var(--muted);max-width:62ch}
+.stack{display:flex;flex-direction:column;gap:12px}
+.hero{display:flex;flex-direction:column;gap:16px}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 .78rem/1 var(--mono);padding:6px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.finding{background:var(--signal-soft);border:1px solid color-mix(in srgb,var(--signal) 35%,transparent);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:14px}
+.finding .eyebrow{color:var(--signal)}
+.bars{display:flex;flex-direction:column;gap:8px;font:14px/1.3 var(--mono)}
+.bar{display:grid;grid-template-columns:150px 1fr 56px;gap:10px;align-items:center}
+.track{height:12px;background:color-mix(in srgb,var(--ink) 8%,transparent);border-radius:3px;overflow:hidden}
+.fill{height:100%;background:var(--muted)}
+.fill.hi{background:var(--signal)}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums}
+.small{font-size:.88rem;color:var(--muted)}
+ol.reasons{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:18px;counter-reset:r}
+ol.reasons li{display:grid;grid-template-columns:28px 1fr;gap:12px;counter-increment:r}
+ol.reasons li::before{content:counter(r);font:600 1.1rem/1.5 var(--serif);color:var(--accent)}
+ol.reasons strong{display:block}
+.form{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:24px;display:flex;flex-direction:column;gap:26px}
+.field{display:flex;flex-direction:column;gap:8px}
+.fieldhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.copy{font:500 .78rem/1 var(--sans);border:1px solid var(--rule);background:var(--ground);color:var(--ink);padding:7px 11px;border-radius:6px;cursor:pointer}
+.copy:hover{border-color:var(--accent);color:var(--accent)}
+.answer{white-space:pre-wrap}
+.answer ul{margin:0;padding-left:20px}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px}
+.kv dt{font-weight:600}
+.kv dd{margin:0}
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:620px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 .72rem/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:none}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tag{font:500 .7rem/1 var(--mono);padding:3px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.tag.warn{background:var(--signal-soft);color:var(--signal)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.stat{background:var(--paper);padding:16px;display:flex;flex-direction:column;gap:4px}
+.stat b{font:600 1.7rem/1.1 var(--serif)}
+.stat span{font-size:.84rem;color:var(--muted)}
+.timeline{display:flex;flex-direction:column;border-left:2px solid var(--rule);margin-left:6px}
+.step{display:grid;grid-template-columns:92px 1fr;gap:14px;padding:0 0 16px 18px;position:relative}
+.step::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:2px solid var(--accent)}
+.step.due::before{background:var(--accent)}
+.step time{font:500 .8rem/1.6 var(--mono);color:var(--muted)}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.role{border-top:2px solid var(--accent);padding-top:10px;display:flex;flex-direction:column;gap:4px}
+.role b{font-size:.95rem}
+.role span{font-size:.88rem;color:var(--muted)}
+.risk{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;padding:12px 0;border-bottom:1px solid var(--rule)}
+.risk:last-child{border-bottom:none}
+.risk .r{font-weight:500}
+.risk .m{color:var(--muted);font-size:.92rem}
+@media (max-width:560px){.bar{grid-template-columns:100px 1fr 48px}.risk{grid-template-columns:1fr}.step{grid-template-columns:1fr;gap:2px}.kv{grid-template-columns:1fr}}
+</style>
+
+<main>
+
+<header class="hero">
+  <span class="eyebrow">COMP 8790 · Topics in Applied AI · Project proposal</span>
+  <h1>Does timing matter? Honest AI for spotting mental-health risk online</h1>
+  <p class="lede">A 2025 paper says that knowing <em>when</em> someone posts helps an AI spot depression, anxiety and suicidality on Reddit. The gain it reports is tiny, it has never been checked against a stronger text model, and it was never tested on posts from a later time period. We test it.</p>
+  <div class="meta">
+    <span class="chip">Domain: Healthcare / Mental health</span>
+    <span class="chip">Task: NLP text classification</span>
+    <span class="chip">Data: public, 700k+ posts</span>
+    <span class="chip">Compute: Colab T4</span>
+  </div>
+</header>
+
+<section>
+  <span class="eyebrow">The hook</span>
+  <div class="finding">
+    <span class="eyebrow">What we found reading the anchor paper</span>
+    <h3>The +1.5 F1 "temporal" gain is small, untested for significance, and the method isn't really early detection</h3>
+    <div class="bars" role="img" aria-label="Reported F1: cross-modal model 0.7376, BiLSTM 0.7222, LSTM 0.7157, CNN 0.7034">
+      <div class="bar"><span>Text + time (theirs)</span><div class="track"><div class="fill hi" style="width:73.76%"></div></div><span class="v">0.7376</span></div>
+      <div class="bar"><span>BiLSTM, text only</span><div class="track"><div class="fill" style="width:72.22%"></div></div><span class="v">0.7222</span></div>
+      <div class="bar"><span>LSTM, text only</span><div class="track"><div class="fill" style="width:71.57%"></div></div><span class="v">0.7157</span></div>
+      <div class="bar"><span>CNN, text only</span><div class="track"><div class="fill" style="width:70.34%"></div></div><span class="v">0.7034</span></div>
+    </div>
+    <p class="small">Reported F1 from Saeed &amp; Ahmed (2025), Table III. Bars start at zero.</p>
+    <ul class="stack" style="margin:0;padding-left:20px">
+      <li>The "temporal" features are just the hour, weekday and month of <strong>each individual post</strong>. There are no user histories, so it isn't early detection in the eRisk sense.</li>
+      <li>The results are a single <strong>validation</strong> split, with no seeds, confidence intervals or released code.</li>
+      <li>There is <strong>no transformer baseline</strong> such as MentalBERT, which is the standard for this task since 2022.</li>
+      <li>There is <strong>no robustness test</strong>: nobody knows whether it still works on posts from a later year.</li>
+    </ul>
+    <p>The course asks, "What did we learn that was not obvious from reading the papers?" This paper gives us that question on day one.</p>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow">For the team</span>
+  <h2>Why we should pick this one</h2>
+  <ol class="reasons">
+    <li><div><strong>The research finding is built in.</strong> Phase I is graded on an evidence-based finding. We already have a testable claim to confirm or overturn: either the timing features help or they don't. Both outcomes are publishable findings.</div></li>
+    <li><div><strong>Reproduction fits the rules exactly.</strong> The course says running the authors' code is not enough. The anchor paper has no code, so we have to reimplement it, and the paper gives full equations and hyperparameters (Sections V–VI).</div></li>
+    <li><div><strong>The data is free, large and downloaded today.</strong> The paper's own Kaggle set has about 700k posts with timestamps. The Low et al. Zenodo set is public domain, 3.1 GB, and has pre- and mid-COVID splits. Neither needs a data agreement.</div></li>
+    <li><div><strong>It runs on Colab.</strong> TF-IDF + LR takes minutes, the BiLSTM runs on a laptop GPU, and MentalRoBERTa-base fine-tunes in about 1–2 hours on a T4. There are no API costs.</div></li>
+    <li><div><strong>Phase II follows directly.</strong> Our Phase I results decide how the Phase II system is designed. Whichever model is most reliable over time becomes the core of a triage assistant for volunteer moderators, with explanations and a human always in the loop.</div></li>
+    <li><div><strong>It matters.</strong> Suicide kills about 727,000 people a year and is a leading cause of death for 15–29-year-olds. The people who post in these communities are often not seen by anyone else.</div></li>
+    <li><div><strong>There's a shot at the +5% bonus.</strong> A careful reproduction plus a robustness study is a recognised paper type at workshops such as CLPsych.</div></li>
+  </ol>
+</section>
+
+<section>
+  <span class="eyebrow">Ready to paste · Week 2 form (5%)</span>
+  <h2>Problem Selection &amp; Feasibility</h2>
+  <div class="form">
+
+    <div class="field">
+      <div class="fieldhead"><h3>Header</h3><button class="copy" data-target="f0" type="button">Copy</button></div>
+      <div id="f0" class="answer">Group Number: [fill in]
+Selected Domain: Healthcare (Mental Health)
+Project Title: Does Timing Matter? Evaluating Temporal Signals and Time-Robustness in AI Detection of Mental-Health Risk from Reddit Posts</div>
+    </div>
+
+    <div class="field">
+      <div class="fieldhead"><h3>1. Problem Definition</h3><button class="copy" data-target="f1" type="button">Copy</button></div>
+      <div id="f1" class="answer">Many people describe their distress in online communities such as Reddit long before, or instead of, seeing a clinician. Recent research proposes AI models that read these posts and flag signs of depression, anxiety, bipolar disorder, borderline personality disorder and suicidality. A 2025 study (Saeed &amp; Ahmed, arXiv:2503.07653) claims that adding posting-time features (hour, weekday, month) to a text model through cross-modal attention improves detection. However, the reported gain is small (F1 0.7376 vs. 0.7222 for a text-only BiLSTM), comes from a single validation split with no released code, and was never compared against domain-adapted language models such as MentalBERT. It is also unknown whether these models stay reliable as the language of distress changes over time, for example between pre- and mid-COVID-19 posts.
+
+We will investigate the specific problem of classifying the mental-health risk category of Reddit posts. We will test (1) whether temporal metadata adds real predictive value beyond text, and (2) how robust text-only and text+temporal models are under temporal distribution shift. We will reimplement three representative methods (TF-IDF + logistic regression, fine-tuned MentalRoBERTa, and BiLSTM with cross-modal attention) and compare them under identical, leakage-free splits on public datasets (the Kaggle Mental Disorders Reddit dataset, about 700k posts, and the Low et al. 2020 Zenodo dataset).</div>
+    </div>
+
+    <div class="field">
+      <div class="fieldhead"><h3>2. Motivation and Real-World Relevance</h3><button class="copy" data-target="f2" type="button">Copy</button></div>
+      <div id="f2" class="answer">Why it matters: Around 280 million people live with depression and 301 million with anxiety disorders (WHO), and suicide caused about 727,000 deaths in 2021. Suicide is a leading cause of death among 15–29-year-olds. In low- and middle-income countries, more than 75% of people with mental disorders receive no treatment, and people often wait years between the first symptoms and first care.
+
+Who is affected: People in distress who post in online support communities, especially young people (nearly half of US teens say they are online "almost constantly", Pew 2024). Also the volunteer moderators and peer supporters who must read huge volumes of posts, and the counselling and crisis services that could reach people sooner.
+
+Practical benefit: An AI triage tool could bring high-risk posts to trained human moderators faster, with calibrated confidence and an explanation of which words drove the flag. It would support human judgement, not replace it or diagnose anyone. Just as important, our evaluation shows which signals can be trusted. It checks whether a claimed improvement is real and whether a model degrades over time, so that communities don't deploy a tool that quietly fails the people it is meant to protect.</div>
+    </div>
+
+    <div class="field">
+      <div class="fieldhead"><h3>3. Proposed AI Task</h3><button class="copy" data-target="f3" type="button">Copy</button></div>
+      <div id="f3" class="answer">Supervised multi-class text classification (NLP).
+Input: a Reddit post (title + body) and its posting-time metadata (hour, weekday, month).
+Output: the predicted mental-health category (e.g. depression, anxiety, bipolar, BPD, schizophrenia, suicidality, or a control/non-clinical class), with a calibrated probability and a word-level explanation.
+
+We will reimplement and compare three methods under identical splits and metrics (macro-F1, recall on high-risk classes, AUPRC, calibration error):
+(A) TF-IDF + logistic regression (classical baseline);
+(B) fine-tuned MentalRoBERTa (domain-adapted transformer);
+(C) BiLSTM + LSTM with cross-modal attention over text and temporal features (Saeed &amp; Ahmed, 2025).
+
+Research question: Do temporal features significantly improve detection over a strong text-only model, and how much does each approach degrade when tested on posts from a later time period than it was trained on?
+
+Phase II: an end-to-end, human-in-the-loop triage assistant for community moderators. It ranks incoming posts by risk, explains each flag, and shows crisis resources.</div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow">The goal</span>
+  <h2>What "done" looks like</h2>
+  <dl class="kv">
+    <dt>By Nov 6</dt><dd>Reimplement methods A, B and C on one shared, leakage-free split. Reproduce the anchor's F1 of 0.7376 to within ±3 points, or explain the gap.</dd>
+    <dt>Finding 1</dt><dd>Measure how much the timing features add, as an ablation over 5 seeds with bootstrap 95% confidence intervals. The target is a sentence like: <em>"Timing adds X ± Y F1 to a BiLSTM but Z to MentalRoBERTa."</em></dd>
+    <dt>Finding 2</dt><dd>Measure the macro-F1 drop when training on earlier posts and testing on later ones (2021→2022, and pre-COVID→mid-COVID), per model family.</dd>
+    <dt>By Dec 4</dt><dd>Deliver a working triage assistant that beats the TF-IDF baseline on macro-F1 and on high-risk recall, with calibration (ECE) and failure cases reported.</dd>
+    <dt>Stretch</dt><dd>With CLEF eRisk access, extend to user-level early detection scored by ERDE. Aim for a publication-ready report (+5%).</dd>
+  </dl>
+</section>
+
+<section>
+  <span class="eyebrow">Why it matters</span>
+  <h2>The numbers</h2>
+  <div class="stats">
+    <div class="stat"><b>280M</b><span>people living with depression (WHO)</span></div>
+    <div class="stat"><b>301M</b><span>living with anxiety disorders (WHO)</span></div>
+    <div class="stat"><b>727k</b><span>suicide deaths in 2021 (WHO)</span></div>
+    <div class="stat"><b>&gt;75%</b><span>untreated in low- and middle-income countries (WHO)</span></div>
+  </div>
+  <p class="small">Sources: <a href="https://www.who.int/news-room/fact-sheets/detail/depression" target="_blank" rel="noopener">WHO depression fact sheet</a>, <a href="https://www.who.int/news-room/fact-sheets/detail/mental-disorders" target="_blank" rel="noopener">WHO mental disorders fact sheet</a>, <a href="https://www.pewresearch.org/internet/2024/12/12/teens-social-media-and-technology-2024/" target="_blank" rel="noopener">Pew 2024</a>. Check the latest WHO wording before submitting.</p>
+</section>
+
+<section>
+  <span class="eyebrow">Literature · 5 core + extended</span>
+  <h2>Papers</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Paper</th><th>Year</th><th>Role</th><th>Method</th><th>Code / data</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://arxiv.org/abs/2503.07653" target="_blank" rel="noopener">Saeed &amp; Ahmed: Early Detection of Mental Health Issues Using Social Media Posts</a></td><td class="num">2025</td><td><span class="tag">Core</span> <span class="tag">Reproduce C</span></td><td>BiLSTM + LSTM + cross-modal attention</td><td>No code · Kaggle data</td></tr>
+      <tr><td><a href="https://arxiv.org/abs/2110.15621" target="_blank" rel="noopener">Ji et al.: MentalBERT</a></td><td class="num">2022</td><td><span class="tag">Core</span> <span class="tag">Reproduce B</span></td><td>Domain-adapted BERT/RoBERTa</td><td>HF weights (gated)</td></tr>
+      <tr><td>Low et al.: NLP of Reddit Mental Health Communities During COVID-19 (JMIR)</td><td class="num">2020</td><td><span class="tag">Core</span> <span class="tag">Reproduce A</span></td><td>TF-IDF + linguistic features, LR/SGD</td><td><a href="https://github.com/danielmlow/reddit" target="_blank" rel="noopener">Code</a> · <a href="https://zenodo.org/records/3941387" target="_blank" rel="noopener">Zenodo</a></td></tr>
+      <tr><td><a href="https://ceur-ws.org/Vol-4038/paper_117.pdf" target="_blank" rel="noopener">Parapar et al.: Overview of eRisk 2025</a></td><td class="num">2025</td><td><span class="tag">Core</span></td><td>Early-risk benchmark, ERDE / F-latency</td><td>Data under agreement</td></tr>
+      <tr><td><a href="https://arxiv.org/abs/2410.16204" target="_blank" rel="noopener">Cao et al.: Systematic review of biases (47 studies)</a></td><td class="num">2024</td><td><span class="tag">Core</span></td><td>Methodology critique</td><td>n/a</td></tr>
+      <tr><td><a href="https://arxiv.org/pdf/2507.10958" target="_blank" rel="noopener">DS@GT at eRisk 2025</a></td><td class="num">2025</td><td>Extended</td><td>MentalRoBERTa + temporal attention</td><td>See paper</td></tr>
+      <tr><td><a href="https://arxiv.org/pdf/2509.19861" target="_blank" rel="noopener">SINAI at eRisk 2025</a></td><td class="num">2025</td><td>Extended</td><td>Transformers, conversational</td><td>Unverified</td></tr>
+      <tr><td><a href="https://arxiv.org/abs/2511.07914" target="_blank" rel="noopener">Social Media for Mental Health: Data, Methods, Findings (survey)</a></td><td class="num">2025</td><td>Extended</td><td>Survey</td><td>n/a</td></tr>
+      <tr><td><a href="https://arxiv.org/abs/2512.02716" target="_blank" rel="noopener">Menta: on-device small LM for mental health</a></td><td class="num">2025</td><td>Extended · Phase II</td><td>Distilled small LM</td><td>See paper</td></tr>
+      <tr><td><a href="https://arxiv.org/pdf/2406.15470" target="_blank" rel="noopener">Mental Disorder Classification via Temporal Representation of Text</a></td><td class="num">2024</td><td>Extended</td><td>Temporal compression of post history</td><td>Unverified</td></tr>
+      <tr><td><a href="https://arxiv.org/abs/1709.01848" target="_blank" rel="noopener">Yates et al.: RSDD</a> · <a href="https://arxiv.org/abs/1806.05258" target="_blank" rel="noopener">Cohan et al.: SMHD</a></td><td class="num">2017–18</td><td>Background</td><td>User-level benchmarks</td><td>Data under agreement</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Two 2026 eRisk papers (arXiv 2609.08161, 2605.14995) came up in search, but we haven't opened them yet. Read them before citing.</p>
+</section>
+
+<section>
+  <span class="eyebrow">Data</span>
+  <h2>Datasets</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Dataset</th><th>Size</th><th>Timestamps</th><th>Access</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://www.kaggle.com/datasets/kamaruladha/mental-disorders-identification-reddit-nlp" target="_blank" rel="noopener">Kaggle: Mental Disorders Identification (Reddit)</a></td><td class="num">~701k posts</td><td>Full UTC</td><td><span class="tag">Open</span> (Kaggle login)</td><td>Anchor reproduction, timing ablation, 2021→2022 shift</td></tr>
+      <tr><td><a href="https://zenodo.org/records/3941387" target="_blank" rel="noopener">Low et al. Reddit Mental Health (Zenodo)</a></td><td class="num">3.1 GB, 28 subreddits</td><td>Day only</td><td><span class="tag">Public domain</span></td><td>Pre- vs mid-COVID shift, control subreddits</td></tr>
+      <tr><td><a href="https://www.kaggle.com/datasets/nikhileswarkomati/suicide-watch" target="_blank" rel="noopener">Kaggle: Suicide and Depression Detection</a></td><td class="num">232k posts</td><td>No</td><td><span class="tag">Open</span></td><td>Cross-dataset test</td></tr>
+      <tr><td><a href="https://erisk.irlab.org" target="_blank" rel="noopener">CLEF eRisk</a></td><td class="num">~909 users (2025)</td><td>User timelines</td><td><span class="tag warn">Agreement</span></td><td>Stretch goal: true early detection</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">What we checked in the Zenodo files: each file has <span style="font-family:var(--mono)">subreddit, author, date, post</span> plus 346 precomputed features. Most authors appear only once per period (74 of 782 bipolar users recur between 2018 and 2019), so we evaluate at the post level.</p>
+</section>
+
+<section>
+  <span class="eyebrow">Plan</span>
+  <h2>Timeline against course deadlines</h2>
+  <div class="timeline">
+    <div class="step due"><time>Sep 25</time><div>Submit this form. Post the domain on the Brightspace forum first. Apply for eRisk access the same day.</div></div>
+    <div class="step due"><time>Oct 2</time><div>Literature comparison matrix of 10–12 papers and a final research question.</div></div>
+    <div class="step due"><time>Oct 9</time><div>Proposal: the shared split protocol (split by time, deduplicated) and the metrics.</div></div>
+    <div class="step"><time>Oct 23</time><div>Reimplement A, B and C. Compare reproduced and reported results.</div></div>
+    <div class="step"><time>Oct 30</time><div>Timing ablation and time-shift experiment, over 5 seeds with confidence intervals.</div></div>
+    <div class="step due"><time>Nov 6</time><div>Phase I presentation and conference-style report.</div></div>
+    <div class="step"><time>Nov 13–27</time><div>Triage assistant: model service, explanation layer, moderator interface, evaluation.</div></div>
+    <div class="step due"><time>Dec 4</time><div>Demo, technical report, responsible-AI analysis.</div></div>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow">Five people, five clear roles</span>
+  <h2>Who does what</h2>
+  <div class="roles">
+    <div class="role"><b>Data &amp; splits</b><span>Loading, deduplication, time-based and leakage-free splits, dataset documentation</span></div>
+    <div class="role"><b>Classical baseline</b><span>TF-IDF + LR, the statistics toolkit (bootstrap, McNemar)</span></div>
+    <div class="role"><b>Transformer</b><span>Fine-tuning MentalRoBERTa, calibration</span></div>
+    <div class="role"><b>Anchor reimplementation</b><span>BiLSTM + cross-modal attention, timing ablation</span></div>
+    <div class="role"><b>System &amp; ethics</b><span>Phase II interface, explanations, responsible-AI report</span></div>
+  </div>
+  <p class="small">Everyone reviews the literature and the final report together, because the course requires every member to explain the whole project.</p>
+</section>
+
+<section>
+  <span class="eyebrow">Honest risks</span>
+  <h2>What could go wrong, and our plan</h2>
+  <div>
+    <div class="risk"><span class="r">Labels come from the subreddit, not a diagnosis</span><span class="m">We frame the task as "risk signal", never diagnosis, and add a cross-dataset test.</span></div>
+    <div class="risk"><span class="r">Leakage and duplicate posts inflate scores</span><span class="m">Deduplicate, split by time, and strip subreddit names from post text.</span></div>
+    <div class="risk"><span class="r">We can't match the 74.55% reported accuracy</span><span class="m">That is still a valid reproduction finding. We report and explain the discrepancy.</span></div>
+    <div class="risk"><span class="r">Privacy and ethics of screening people</span><span class="m">Public, anonymised data only. No quoting of posts. A human decides every flag, and crisis resources are always shown.</span></div>
+    <div class="risk"><span class="r">eRisk access doesn't arrive in time</span><span class="m">It's only a stretch goal. The core plan runs entirely on open data.</span></div>
+    <div class="risk"><span class="r">The healthcare domain is already taken on Brightspace</span><span class="m">Check the forum today. If it's taken, the same project can be framed under a "social media / online safety" domain.</span></div>
+  </div>
+</section>
+
+</main>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var el=document.getElementById(btn.dataset.target);
+    var text=el.innerText;
+    var done=function(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy';},1500);};
+    var fallback=function(){var r=document.createRange();r.selectNodeContents(el);var s=window.getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected, press ⌘C';};
+    try{navigator.clipboard.writeText(text).then(done,fallback);}catch(e){fallback();}
+  });
+});
+</script>
