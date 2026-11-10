@@ -41,10 +41,12 @@ def temporal(df, train_years, test_year, seed):
     return tr, va, test, dropped
 
 
-def main(source: str, seed: int = 42) -> None:
-    out = ROOT / "data" / "splits" / source
+def main(source: str, seed: int = 42, rep: int | None = None) -> None:
+    out, proc = ROOT / "data" / "splits" / source, ROOT / "data" / "processed" / source
+    if rep is not None:
+        out, proc, seed = out / f"rep{rep}", proc / f"rep{rep}", seed + rep
     out.mkdir(parents=True, exist_ok=True)
-    df = pd.read_parquet(ROOT / "data" / "processed" / source / "sample.parquet")
+    df = pd.read_parquet(proc / "sample.parquet")
 
     trainval, test = train_test_split(df, test_size=0.2, stratify=df.label, random_state=seed)
     test, dropped = drop_author_overlap(trainval, test)
@@ -75,4 +77,6 @@ def main(source: str, seed: int = 42) -> None:
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--source", choices=["kaggle", "zenodo"], default="kaggle")
-    main(ap.parse_args().source)
+    ap.add_argument("--rep", type=int, default=None)
+    a = ap.parse_args()
+    main(a.source, rep=a.rep)

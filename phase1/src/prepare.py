@@ -2,6 +2,7 @@
 
 python src/prepare.py --source kaggle --n 20000
 python src/prepare.py --source zenodo --n 20000
+python src/prepare.py --source kaggle --n 60000 --rep 0
 
 Output: data/processed/<source>/sample.parquet and funnel.json
 """
@@ -52,8 +53,10 @@ def norm_hash(s: str) -> str:
     return hashlib.md5(re.sub(r"[^a-z0-9]", "", s.lower()).encode()).hexdigest()
 
 
-def main(source: str, n: int, seed: int) -> None:
+def main(source: str, n: int, seed: int, rep: int | None = None) -> None:
     out = DATA / "processed" / source
+    if rep is not None:  # replicate k: its own sample, seed + k
+        out, seed = out / f"rep{rep}", seed + rep
     out.mkdir(parents=True, exist_ok=True)
     funnel = []
 
@@ -122,5 +125,6 @@ if __name__ == "__main__":
     ap.add_argument("--source", choices=["kaggle", "zenodo"], default="kaggle")
     ap.add_argument("--n", type=int, default=20000)
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--rep", type=int, default=None, help="replicate index, writes to data/processed/<source>/rep<k>/")
     a = ap.parse_args()
-    main(a.source, a.n, a.seed)
+    main(a.source, a.n, a.seed, a.rep)
