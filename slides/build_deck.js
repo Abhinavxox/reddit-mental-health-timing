@@ -296,6 +296,26 @@ const card = (s, x, y, w, h, name) => s.addShape(pres.ShapeType.roundRect, { x, 
   ], { x: 5.35, y: 2.05, w: 3.9, h: 2.6, fontSize: 14, color: C.text1, paraSpaceAfter: 6, valign: "top", isTextBox: true, margin: 0 });
 }
 
+// 11 References
+{
+  const s = content("References", "Full reviews of every paper are in docs/literature/literature_review_combined.md in the repo.");
+  const R = [
+    "Saeed, Q. B., & Ahmed, I. (2025). Early detection of mental health issues using social media posts. arXiv:2503.07653.",
+    "Low, D. M., et al. (2020). NLP reveals vulnerable mental health support groups and heightened health anxiety on Reddit during COVID-19. JMIR 22(10), e22635.",
+    "Cohan, A., et al. (2018). SMHD: A large-scale resource for multiple mental health conditions. COLING 2018.",
+    "Kumar, R., Maharaj, K., Saxena, A., & Bhattacharyya, P. (2024). Mental disorder classification via temporal representation of text. Findings of EMNLP 2024.",
+    "Parapar, J., Pérez, A., Wang, X., & Crestani, F. (2025). Overview of eRisk at CLEF 2025. CEUR-WS 4038.",
+    "Ji, S., et al. (2022). MentalBERT: Publicly available pretrained language models for mental healthcare. LREC 2022.",
+    "Cao, Y., et al. (2024). ML approaches for mental illness detection on social media: a systematic review of biases. arXiv:2410.16204.",
+    "Kamarudin, N. S., Beigi, G., Manikonda, L., & Liu, H. (2025). Social media for mental health: Data, methods, and findings. arXiv:2511.07914.",
+    "Zhang, T., et al. (2025). Menta: A small language model for on-device mental health prediction. arXiv:2512.02716.",
+    "Miyaguchi, A., et al. (2025). DS@GT at eRisk 2025. arXiv:2507.10958.",
+    "World Health Organization (2025). Depression fact sheet; (2022) World mental health report; (2025) Suicide worldwide in 2021.",
+    "Data: Kaggle Mental Disorders Identification (Reddit), kamaruladha; Low et al. Reddit Mental Health Dataset, Zenodo 3941387.",
+  ];
+  s.addText(R.map((t, i) => ({ text: `[${i + 1}] ${t}`, options: { breakLine: i < R.length - 1 } })), { x: 0.5, y: 1.2, w: 9, h: 3.9, fontSize: 10, color: C.text1, paraSpaceAfter: 3, valign: "top", isTextBox: true, margin: 0 });
+}
+
 (async () => {
   const out = path.join(__dirname, "Phase1_Timing_Matters.pptx");
   await pres.writeFile({ fileName: out });

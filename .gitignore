@@ -40,3 +40,4 @@ kaggle.json
 *.npz
 node_modules/
 slides/deck_data.json
+!phase1/results/**/*.npz
