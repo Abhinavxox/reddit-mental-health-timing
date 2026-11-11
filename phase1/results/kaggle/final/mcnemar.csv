@@ -1,0 +1,4 @@
+split,model_a,model_b,only_a_right,only_b_right,chi2,p_value
+random,bilstm,tfidf,5099,4796,9.21718,0.002398
+random_matched,bilstm,tfidf,4846,5185,11.389094,0.000739
+temporal_late,bilstm,tfidf,5060,5602,27.450853,0.0

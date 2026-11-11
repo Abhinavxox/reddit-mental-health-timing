@@ -1,0 +1,15 @@
+model,split,time_variant,vs,n_reps,delta_macro_f1,ci_low,ci_high,ci_excludes_0
+bilstm,random,text_time,text,5,-0.0006,-0.0048,0.0035,False
+bilstm,random,text_time_concat,text,5,0.0015,-0.0027,0.0051,False
+bilstm,random_matched,text_time,text,5,0.0048,0.0007,0.0089,True
+bilstm,random_matched,text_time_concat,text,5,-0.0038,-0.0078,0.0004,False
+bilstm,temporal_late,text_time,text,5,0.0061,0.0021,0.0101,True
+bilstm,temporal_late,text_time_concat,text,5,-0.0027,-0.0064,0.0009,False
+tfidf,random,text_time,text,5,0.0012,-0.001,0.0032,False
+tfidf,random,text_time_nomonth,text,5,-0.0005,-0.0025,0.0015,False
+tfidf,random_matched,text_time,text,5,-0.0032,-0.0059,-0.0004,True
+tfidf,random_matched,text_time_nomonth,text,5,-0.0029,-0.0054,-0.0004,True
+tfidf,temporal_2021_22,text_time,text,5,-0.3175,-0.3201,-0.315,True
+tfidf,temporal_2021_22,text_time_nomonth,text,5,-0.0221,-0.0236,-0.0206,True
+tfidf,temporal_late,text_time,text,5,-0.0155,-0.0181,-0.0133,True
+tfidf,temporal_late,text_time_nomonth,text,5,-0.0016,-0.0037,0.0004,False

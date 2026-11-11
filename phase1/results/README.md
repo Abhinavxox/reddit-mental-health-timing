@@ -1,3 +1,44 @@
+# Milestone 2 results (final runs: Methods A and C, 5 replicates)
+
+**5 replicates, each a fresh 60k stratified sample, fresh split and fresh model initialisation. Mean over replicates, 95% paired bootstrap intervals (1000 resamples). Method B (MentalRoBERTa) is not run yet, see the TODO.** Raw tables are in `final/` (`summary.csv`, `delta_time.csv`, `delta_shift.csv`, `mcnemar.csv`), figures in `phase1/figures/`.
+
+## Macro F1 (mean of 5 replicates)
+
+| Model | Features | random | random_matched | temporal_late |
+|---|---|---|---|---|
+| A TF-IDF + LR | text | 0.642 | 0.636 | 0.636 |
+| A TF-IDF + LR | text + time | 0.643 | 0.633 | 0.620 |
+| C BiLSTM | text | 0.630 | 0.609 | 0.608 |
+| C BiLSTM | text + time (attention) | 0.630 | 0.614 | 0.614 |
+| C BiLSTM | text + time (concat) | 0.632 | 0.605 | 0.605 |
+
+Weighted F1 on `random`: A text 0.741, A text + time 0.743, C text 0.730, C text + time 0.730. The anchor paper reports 0.7222 (text) and 0.7376 (text + time).
+
+## Change in macro F1 from adding time features (95% CI)
+
+| Model | random | random_matched | temporal_late |
+|---|---|---|---|
+| A | +0.001 [-0.001, +0.003] | -0.003 [-0.006, -0.000] | -0.016 [-0.018, -0.013] |
+| C attention | -0.001 [-0.005, +0.004] | +0.005 [+0.001, +0.009] | +0.006 [+0.002, +0.010] |
+| C concat | +0.002 [-0.003, +0.005] | -0.004 [-0.008, +0.000] | -0.003 [-0.006, +0.001] |
+
+## What this shows
+
+1. **The anchor paper's timing gain is not reproduced.** On the random split (the paper's setup) time features change macro F1 by an amount whose interval includes 0 for every model. The only gains are +0.005 and +0.006 for the weaker BiLSTM with attention fusion on two splits. Time never helps the stronger TF-IDF model, and hurts it on `temporal_late`.
+2. **The valid time shift costs nothing measurable.** `temporal_late` minus `random_matched` (text only): BiLSTM -0.001 [-0.008, +0.005], TF-IDF -0.001 [-0.007, +0.006].
+3. **TF-IDF + LR is at least as good as the BiLSTM.** McNemar favours TF-IDF on `random_matched` and `temporal_late` (p < 0.001), BiLSTM on `random` by a small margin (p = 0.002).
+4. **The 2021 to 2022 split stays confounded.** Method A text + time falls to 0.248 there, and 0.543 without month and day (text only 0.565).
+5. **Time alone is at chance** (0.15 on random, uniform random guess 0.145).
+
+## Limits of these results
+
+- Method C is our rebuild from the paper's equations (no code released), every choice is in `logs/decision_log.md`.
+- Kaggle has no author column, same-user leakage cannot be checked there.
+- Labels are subreddits, not diagnoses. Condition names stay in the text (D3).
+- One run (BiLSTM, concat, rep 4) took far longer than the others because the laptop was busy. Scores are unaffected.
+
+---
+
 # Milestone 1 results (prototype, Method A)
 
 **One seed, 20k stratified sample. No confidence intervals yet. These are prototype numbers, not final findings.**
@@ -76,7 +117,7 @@ Train / test: random 14,400 / 3,911, random_matched 10,388 / 3,911, temporal_1y 
 - C is tuned on a validation set from the training period, which cannot see a time shift.
 - Small classes are noisy (for example 98 schizophrenia posts from 2021 in the sample).
 - Labels are subreddits, not diagnoses.
-- Not yet run: Methods B and C.
+- Methods B and C were not run at this stage (see the Milestone 2 section above).
 
 ## Reproduce
 

@@ -126,3 +126,15 @@ The paper released no code, so every choice below is ours. Each is also a possib
 
 **D29. Method B uses a 20k training subsample, 128 tokens, 2 epochs, 3 replicates, cells `random_matched` and `temporal_late`.**
 - Budget choice for free Colab. The subsample is the same rows for text only and text + time. The cap is a deviation from Methods A and C, which use all training rows, so cross-method gaps partly reflect training size. State this in the report.
+
+---
+
+## Nov 11, 2026: final runs and reading the results
+
+**D30. Final verdict rule, fixed before looking at Method B.**
+- If the 95% CI of "time on minus time off" includes 0 for every method, the verdict is no evidence that timing helps. A gain only for the weak BiLSTM is reported as "timing helps only a weak model", not as support for the anchor paper.
+- Result for Methods A and C: no gain for TF-IDF, a tiny gain (+0.005 to +0.006) for the BiLSTM on two of three splits, none on the paper's random split.
+
+**D31. The slow run (8,075 s) is kept, not rerun.** The laptop was busy or asleep, the score (0.621) is in line with the others and the seed is fixed, so rerunning would not change the numbers.
+
+**D32. Method B access.** The Hugging Face token worked only after the model terms were accepted on the account. The token was shared in chat, so it should be revoked after Method B finishes.
