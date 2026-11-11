@@ -16,6 +16,17 @@ PDFs are not stored in the repo. Links below.
 9. Kamarudin, N. S., Beigi, G., Manikonda, L., & Liu, H. (2025). Social media for mental health: Data, methods, and findings. arXiv:2511.07914. https://arxiv.org/abs/2511.07914 (reviewed by Jaskamal)
 10. Zhang, T., et al. (2025). Menta: A small language model for on-device mental health prediction. arXiv:2512.02716. https://arxiv.org/abs/2512.02716 (reviewed by Zohaib Jawaid)
 
+## Motivation statistics (used in the proposal deck, verify before reuse)
+- World Health Organization. (2025). Depression [Fact sheet]. https://www.who.int/news-room/fact-sheets/detail/depression
+- World Health Organization. (2022). World mental health report: Transforming mental health for all. https://www.who.int/publications/i/item/9789240049338
+- World Health Organization. (2025). Suicide worldwide in 2021: Global health estimates.
+
+## Where the reviews are
+- `literature_review_combined.md`: all reviews by all members, cross-paper analysis, trends, gap and research question (submitted Oct 9, graded 23/25)
+- `abhinav_reviews.md`: Abhinav's two reviews
+- `../submissions/02_literature_review_report.pdf`: the submitted report
+- `../submissions/03_phase1_proposal_presentation.pptx`: the Oct 22 proposal deck (student IDs removed)
+
 ## Datasets
 - Kaggle Mental Disorders Identification (Reddit): https://www.kaggle.com/datasets/kamaruladha/mental-disorders-identification-reddit-nlp
 - Low et al. Reddit Mental Health Dataset (Zenodo): https://zenodo.org/records/3941387

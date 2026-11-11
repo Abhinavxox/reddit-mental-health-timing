@@ -7,7 +7,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Saeed and Ahmed (2025) report that adding posting-time features to a BiLSTM text classifier improves six-way classification of mental-health subreddits (weighted F1 0.7376 versus 0.7222). We test that claim against a strong text-only baseline (TF-IDF with logistic regression) and a fine-tuned MentalRoBERTa, using five replicates, paired bootstrap intervals, and a time-shift split that avoids a data-collection artefact we found in the shared dataset. For TF-IDF and the BiLSTM we find no reliable gain from time features on the paper's own random split, a gain of at most 0.006 macro F1 for the weaker BiLSTM on two splits, and a small loss for TF-IDF under time shift. MentalRoBERTa is the strongest text model (macro F1 about 0.68) and time features add nothing to it (change $-0.002$ to $0.000$, intervals include zero). Training on earlier posts and testing on later ones costs no measurable accuracy over Nov 2021 to Nov 2022.
+Saeed and Ahmed~\cite{saeed} report that adding posting-time features to a BiLSTM text classifier improves six-way classification of mental-health subreddits (weighted F1 0.7376 versus 0.7222). We test that claim against a strong text-only baseline (TF-IDF with logistic regression) and a fine-tuned MentalRoBERTa, using five replicates, paired bootstrap intervals, and a time-shift split that avoids a data-collection artefact we found in the shared dataset. For TF-IDF and the BiLSTM we find no reliable gain from time features on the paper's own random split, a gain of at most 0.006 macro F1 for the weaker BiLSTM on two splits, and a small loss for TF-IDF under time shift. MentalRoBERTa is the strongest text model (macro F1 about 0.68) and time features add nothing to it (change $-0.002$ to $0.000$, intervals include zero). Training on earlier posts and testing on later ones costs no measurable accuracy over Nov 2021 to Nov 2022.
 \end{abstract}
 
 \section{Introduction}
@@ -17,7 +17,19 @@ Reddit communities are used to study mental-health language at scale, and detect
 Given a post $x$ with text and a timestamp, predict one of six classes (depression, anxiety, bipolar, BPD, schizophrenia, mentalillness). \textbf{RQ1:} do posting-time features significantly improve macro F1 over a strong text-only model, and how much does each method lose when trained on earlier posts and tested on later ones? Our main metric is macro F1, because it weights small classes equally. We also report weighted F1 to compare with the paper, whose recall equals its accuracy, which is what weighted averaging gives.
 
 \section{Related Work}
-Saeed and Ahmed (2025) combine a BiLSTM text branch with an LSTM over time features through cross-modal attention, and report the gain above on 2021 to 2022 Reddit data; they release no code. Ji et al.\ (2022) pretrain MentalBERT and MentalRoBERTa on mental-health Reddit text and show gains on detection tasks, which is why we use MentalRoBERTa as our strong model. Low et al.\ (2020) study how language in mental-health subreddits changed during COVID-19 and release a dataset with author identifiers, which we use as a second check. \textbf{[Team members to add their reviewed papers.]}
+Our group reviewed ten papers (Table~\ref{tab:lit}). \textbf{Anchor.} Saeed and Ahmed~\cite{saeed} fuse a BiLSTM text branch with an LSTM over six time features through cross-modal attention and report weighted F1 0.7376 against 0.7222 for text only, from one split, with no transformer baseline and no code. \textbf{Simple baselines and time.} Low et al.~\cite{low} classify mental-health subreddits with TF-IDF and linear models (weighted F1 0.851) and show language changing during COVID-19, which gives us both a baseline and a pre- versus mid-COVID dataset. Cohan et al.~\cite{cohan} build SMHD and find TF-IDF models precise but low in recall, and never split by time. \textbf{Temporal models.} Kumar et al.~\cite{kumar} turn a user's post history into a time series and show that order matters at the user level, which is a different use of time from timestamps. \textbf{Evaluation.} The eRisk 2025 overview~\cite{erisk} and the DS@GT entry~\cite{dsgt} show that high recall alone is not useful (recall 1.00 with F1 0.20) and that early-detection metrics need care. \textbf{Strong text models.} MentalRoBERTa~\cite{ji} is pretrained on mental-health Reddit and is the strong text model the anchor paper never compared with; Menta~\cite{menta} shows small models can be competitive. \textbf{Methodology.} Cao et al.~\cite{cao} review 47 studies and find frequent leakage, untuned baselines and accuracy-only reporting, and Kamarudin et al.~\cite{kamarudin} survey data and methods in the field. \textbf{Gap.} No study tests whether timestamp features help once a strong text model and repeated, leakage-controlled, time-aware evaluation are used.
+
+\begin{table*}[t]\centering\small
+\begin{tabular}{p{3.0cm}p{4.3cm}p{4.2cm}p{4.5cm}}\toprule
+Paper (reviewer) & Approach & Finding & Limitation \\\midrule
+Saeed \& Ahmed 2025 (Abhinav) & BiLSTM + time LSTM, cross-modal attention & +1.5 F1 from time & one split, no transformer, no code \\
+Low et al.\ 2020 (Sudesh) & TF-IDF/LIWC + linear models & weighted F1 0.851; COVID language shift & no transformer, post level only \\
+Cohan et al.\ 2018 (Jaskamal) & SMHD, TF-IDF, FastText, CNN & high precision, low recall & no time split, data under agreement \\
+Kumar et al.\ 2024 (Zohaib) & post history as a time series & order of posts matters & user level, baselines copied \\
+Parapar et al.\ 2025 (Xing) & eRisk shared tasks & best F1 0.85; recall alone misleads & no timestamp features, no later-period test \\\bottomrule
+\end{tabular}
+\caption{The five core papers. Supporting papers: MentalBERT (Abhinav), Cao et al.\ (Sudesh), Kamarudin et al.\ (Jaskamal), Menta (Zohaib), DS@GT (Xing).}\label{tab:lit}
+\end{table*}
 
 \section{Methodology}
 \paragraph{Data.} The Kaggle ``Mental Disorders Identification (Reddit)'' file (701,787 posts, 2010 to 2022, timestamps with hour, no author column) is the anchor paper's data. After the same filters (2021 and 2022 only, no NSFW, no empty or very short posts) and our leakage control, 483,715 posts remain. Leakage control removes subreddit mentions (``r/depression'', ``this sub''), texts that appear under more than one label, and duplicates. Condition names stay in the text, which makes the task easier than real detection and is a limitation. Each replicate draws a stratified 60k sample by label and month.
@@ -68,9 +80,16 @@ Labels are subreddits and not diagnoses. Condition names remain in the text. The
 \section{Conclusion}
 Timing does not reliably matter for classifying these subreddits once a strong text model is used, and claims of timing gains should be checked on splits that avoid collection artefacts.
 
-\begin{thebibliography}{9}
-\bibitem{saeed} Saeed and Ahmed. Temporal features for mental-health classification on Reddit. arXiv:2503.07653, 2025.
-\bibitem{ji} Ji et al. MentalBERT: Publicly available pretrained language models for mental healthcare. LREC, 2022.
-\bibitem{low} Low et al. Natural language processing reveals vulnerable mental health support groups and heightened health anxiety on Reddit during COVID-19. J.\ Med.\ Internet Res., 2020.
+\begin{thebibliography}{10}
+\bibitem{saeed} Q.~B. Saeed and I.~Ahmed. Early detection of mental health issues using social media posts. arXiv:2503.07653, 2025.
+\bibitem{low} D.~M. Low, L.~Rumker, T.~Talkar, J.~Torous, G.~Cecchi, and S.~S. Ghosh. Natural language processing reveals vulnerable mental health support groups and heightened health anxiety on Reddit during COVID-19. JMIR 22(10):e22635, 2020.
+\bibitem{cohan} A.~Cohan, B.~Desmet, A.~Yates, L.~Soldaini, S.~MacAvaney, and N.~Goharian. SMHD: A large-scale resource for exploring online language usage for multiple mental health conditions. COLING, 2018.
+\bibitem{kumar} R.~Kumar, K.~Maharaj, A.~Saxena, and P.~Bhattacharyya. Mental disorder classification via temporal representation of text. Findings of EMNLP, 2024.
+\bibitem{erisk} J.~Parapar, A.~P\'erez, X.~Wang, and F.~Crestani. Overview of eRisk at CLEF 2025: Early risk prediction on the internet. CEUR-WS 4038, 2025.
+\bibitem{dsgt} A.~Miyaguchi, D.~Guecha, Y.~Chiu, and S.~Gaur. DS@GT at eRisk 2025. arXiv:2507.10958, 2025.
+\bibitem{ji} S.~Ji, T.~Zhang, L.~Ansari, J.~Fu, P.~Tiwari, and E.~Cambria. MentalBERT: Publicly available pretrained language models for mental healthcare. LREC, 2022.
+\bibitem{cao} Y.~Cao et al. Machine learning approaches for mental illness detection on social media: A systematic review of biases and methodological challenges. arXiv:2410.16204, 2024.
+\bibitem{kamarudin} N.~S. Kamarudin, G.~Beigi, L.~Manikonda, and H.~Liu. Social media for mental health: Data, methods, and findings. arXiv:2511.07914, 2025.
+\bibitem{menta} T.~Zhang et al. Menta: A small language model for on-device mental health prediction. arXiv:2512.02716, 2025.
 \end{thebibliography}
 \end{document}
