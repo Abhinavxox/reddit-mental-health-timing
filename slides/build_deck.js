@@ -263,20 +263,20 @@ const card = (s, x, y, w, h, name) => s.addShape(pres.ShapeType.roundRect, { x, 
 
 // 9b Team
 {
-  const s = content("Team and responsibilities", "Everyone reviewed papers and can explain the whole study. Abhinav leads and coordinates.");
+  const s = content("Team and responsibilities", "Everyone reviewed papers and can explain the whole study. Abhinav leads and coordinates. Phase II is shared by all.");
   const rows = [[hdrc("Member"), hdrc("Phase I responsibility"), hdrc("Papers reviewed")],
-    ["Abhinav Pandey (lead)", "Coordination, repo, Method C, timing ablation, report", "Saeed & Ahmed 2025, MentalBERT"],
-    ["Thotagamuwage Sudesh Nimesha", "Method A, statistics (bootstrap, McNemar)", "Low et al. 2020, Cao et al. 2024"],
-    ["Jaskamal", "Data loading, leakage removal, time splits", "Cohan et al. 2018, Kamarudin et al. 2025"],
-    ["Zohaib Jawaid", "Method B (MentalRoBERTa on Colab)", "Kumar et al. 2024, Menta 2025"],
-    ["Xing Liao", "Phase II interface, explanations, ethics", "Parapar et al. 2025 (eRisk)"]].map((r, i) => i === 0 ? r : r.map(t => ({ text: t, options: { fontSize: 12 } })));
+    ["Abhinav Pandey (lead)", "Coordination, repo, Methods B and C, timing ablation, report", "Saeed & Ahmed 2025, MentalBERT"],
+    ["Thotagamuwage Sudesh Nimesha", "Statistics, interpretation, comparison with papers", "Low et al. 2020, Cao et al. 2024"],
+    ["Jaskamal", "Method A (TF-IDF + logistic regression)", "Cohan et al. 2018, Kamarudin et al. 2025"],
+    ["Zohaib Jawaid", "Model explanations: top words, confused classes", "Kumar et al. 2024, Menta 2025"],
+    ["Xing Liao", "Data: loading, leakage removal, stratification, splits", "Parapar et al. 2025 (eRisk)"]].map((r, i) => i === 0 ? r : r.map(t => ({ text: t, options: { fontSize: 12 } })));
   s.addTable(rows, { x: 0.5, y: 1.3, w: 9, colW: [2.6, 3.6, 2.8], rowH: 0.5, border: { type: "solid", color: "D5DCE4", pt: 0.5 }, color: "1B2A41", valign: "middle" });
-  s.addText("Code, logs and decisions: github.com/Abhinavxox/reddit-mental-health-timing", { x: 0.5, y: 4.5, w: 9, h: 0.35, fontSize: 12, color: C.accent3, isTextBox: true, margin: 0 });
+  s.addText("Phase II (interface, explanations, ethics) is shared by all.  Code, logs and decisions: github.com/Abhinavxox/reddit-mental-health-timing", { x: 0.5, y: 4.5, w: 9, h: 0.35, fontSize: 12, color: C.accent3, isTextBox: true, margin: 0 });
 }
 
 // 10 Limits and next
 {
-  const s = content("Limits, and what comes next", "Limits are on the left. Phase II is a moderator triage assistant that uses the best model, with an ethics plan. Xing Liao leads the interface, explanations and ethics report.");
+  const s = content("Limits, and what comes next", "Limits are on the left. Phase II is a moderator triage assistant that uses the best model, with an ethics plan. Phase II work is shared by the whole team.");
   card(s, 0.5, 1.4, 4.4, 3.4, "limits card");
   s.addText("Limits", { x: 0.75, y: 1.55, w: 3.9, h: 0.4, fontSize: 18, bold: true, color: C.text1, isTextBox: true, margin: 0 });
   s.addText([

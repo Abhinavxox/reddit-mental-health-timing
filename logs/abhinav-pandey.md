@@ -1,6 +1,6 @@
 # Contribution log: Abhinav Pandey
 
-Role: team lead. Project coordination and repo setup, anchor reimplementation (Method C), timing ablation.
+Role: team lead. Coordination and repo, anchor reimplementation (Method C), Method B runs on Colab, timing ablation, report.
 
 Entries before Nov 6 were written on Nov 6, 2026 from my dated files and course submissions.
 

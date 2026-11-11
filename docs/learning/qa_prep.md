@@ -33,7 +33,7 @@ Yes. It tells people not to add timing features expecting a gain, and to check d
 
 ---
 
-## 2. Data (Jaskamal leads, everyone should know)
+## 2. Data (Xing leads, everyone should know)
 
 **What data did you use?**
 The Kaggle "Mental Disorders Identification (Reddit)" dataset, 701,787 posts from 6 subreddits: depression, anxiety, bipolar, BPD, schizophrenia, mentalillness. The same data the anchor paper used.
@@ -74,7 +74,7 @@ Time and memory on a free GPU and an 8 GB laptop. 60k posts per replicate times 
 
 ---
 
-## 3. Splits (Jaskamal)
+## 3. Splits (Xing)
 
 **What splits did you use?**
 
@@ -121,8 +121,8 @@ It hides poor performance on small classes. A review we read (Cao et al. 2024) f
 
 **Why these three methods?**
 
-- A, TF-IDF + logistic regression (Sudesh): the simple classic baseline used by Low et al. Fast, and hard to beat.
-- B, MentalRoBERTa (Zohaib): a transformer pretrained on mental-health Reddit. The strong text model the anchor paper never compared with.
+- A, TF-IDF + logistic regression (Jaskamal): the simple classic baseline used by Low et al. Fast, and hard to beat.
+- B, MentalRoBERTa (Abhinav): a transformer pretrained on mental-health Reddit. The strong text model the anchor paper never compared with.
 - C, BiLSTM with cross-modal attention (Abhinav): the anchor paper's own model, which we rebuilt.
 
 **How does TF-IDF work?**
@@ -158,7 +158,7 @@ Transformers fine-tune quickly and overfit after a few epochs. Also the free GPU
 
 ---
 
-## 6. Statistics (Sudesh)
+## 6. Statistics and comparison with the papers (Sudesh)
 
 **What is a replicate?**
 A fresh 60k sample, a fresh split, and a fresh model start. We did 5 for A and C, 3 for B. It shows how much results move by chance.
@@ -176,6 +176,17 @@ It compares two models on the same posts: how many posts only model 1 got right 
 The interval excludes 0, so it is probably real, but it is half a point and only for the weakest model. On the paper's own random split it is zero. Not useful in practice.
 
 ---
+
+## 6b. What the model looks at (Zohaib)
+
+**How do you know what the model uses to decide?**
+For Method A we can read the weights directly: for each class, the words with the biggest positive weight. They are sensible, for example drug names and symptom words, and no subreddit names, which also tells us the leakage removal worked.
+
+**Which classes get confused?**
+From the confusion matrix (Method A, later-period test): mentalillness is hardest, only about 1 in 4 of its posts are found, because it is a general community. Depression acts as a catch-all: posts from BPD (408), anxiety (335) and bipolar (246) are most often wrongly sent there.
+
+**Why does this matter?**
+A moderator needs to know why a post was flagged. Showing the key words is a simple, honest explanation. This is the starting point for Phase II.
 
 ## 7. Results numbers to remember
 
@@ -196,7 +207,7 @@ mentalillness, because it is a general community that overlaps with all others.
 
 ---
 
-## 8. Tools and compute (Abhinav / Zohaib)
+## 8. Tools and compute (Abhinav)
 
 **What did you run it on?**
 
@@ -239,11 +250,13 @@ Yes. We used AI coding assistants to help write and debug code and to draft text
 
 | Member | Responsibility | Papers reviewed |
 |---|---|---|
-| Abhinav Pandey (lead) | Coordination, repo, Method C, timing ablation, report | Saeed & Ahmed 2025, MentalBERT |
-| Thotagamuwage Sudesh Nimesha | Method A, statistics | Low et al. 2020, Cao et al. 2024 |
-| Jaskamal | Data loading, leakage removal, time splits | Cohan et al. 2018, Kamarudin et al. 2025 |
-| Zohaib Jawaid | Method B on Colab | Kumar et al. 2024, Menta 2025 |
-| Xing Liao | Phase II interface, explanations, ethics | Parapar et al. 2025 (eRisk) |
+| Abhinav Pandey (lead) | Coordination, repo, Method C, Method B runs on Colab, timing ablation, report | Saeed & Ahmed 2025, MentalBERT |
+| Thotagamuwage Sudesh Nimesha | Statistics, interpretation, comparison with the papers | Low et al. 2020, Cao et al. 2024 |
+| Jaskamal | Method A (TF-IDF + logistic regression) | Cohan et al. 2018, Kamarudin et al. 2025 |
+| Zohaib Jawaid | Model explanations: top words, confused classes | Kumar et al. 2024, Menta 2025 |
+| Xing Liao | Data loading, leakage removal, stratification, splits | Parapar et al. 2025 (eRisk) |
+
+Phase II (interface, explanations, ethics) is shared by everyone.
 
 **How did you coordinate?**
 GitHub repo with a shared TODO, a weekly log table, personal logs and a decision log.

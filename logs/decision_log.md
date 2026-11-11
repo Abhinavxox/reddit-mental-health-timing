@@ -145,3 +145,11 @@ The paper released no code, so every choice below is ours. Each is also a possib
 - Not claimed: that leakage never matters. It would matter more with a model that memorises (a pretrained transformer) or a smaller dataset, which we did not test.
 
 **D34. Slides built from the results files** (`slides/deck_data.py` then `slides/build_deck.js`) so the numbers can be refreshed when Method B rep 2 arrives.
+
+**D35. Roles rebalanced (Nov 11, 2026), decided by the team lead.**
+- Xing Liao takes the data work (loading, leakage removal, stratified sampling, splits, the leakage/stratification test), which was Jaskamal's.
+- Jaskamal takes Method A (TF-IDF + logistic regression), which was Sudesh's.
+- Sudesh Nimesha keeps statistics and adds interpretation and the comparison with the papers.
+- Zohaib Jawaid takes model explanations (top words per class, which classes get confused). Method B was run by Abhinav on Colab.
+- Phase II (interface, explanations, ethics) is shared by everyone.
+- Papers each member reviewed do not change.

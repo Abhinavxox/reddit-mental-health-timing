@@ -43,11 +43,13 @@ Each method is trained text-only and text + time, on a random split and on time-
 
 | Member | Role |
 |---|---|
-| Abhinav Pandey | **Team lead.** Project coordination and repo setup, anchor reimplementation (Method C), timing ablation |
-| Sudesh Nimesha | Classical baseline (Method A), statistics toolkit |
-| Jaskamal | Data loading, deduplication, time-based splits |
-| Zohaib Jawaid | MentalRoBERTa fine-tuning (Method B), calibration |
-| Xing Liao | Triage interface, explanations, ethics report |
+| Abhinav Pandey | **Team lead.** Coordination and repo, anchor reimplementation (Method C), Method B runs on Colab, timing ablation, report |
+| Sudesh Nimesha | Statistics (replicates, bootstrap intervals, McNemar), interpretation, comparison with the papers |
+| Jaskamal | Classical baseline (Method A, TF-IDF + logistic regression) |
+| Zohaib Jawaid | Model explanations: top words per class, which classes get confused |
+| Xing Liao | Data: loading, leakage removal, stratified sampling, splits, and the leakage/stratification test |
+
+Roles were rebalanced on Nov 11, 2026 (see `logs/decision_log.md`, D35). Phase II (triage interface, explanations, ethics) is shared by everyone.
 
 ## Timeline
 

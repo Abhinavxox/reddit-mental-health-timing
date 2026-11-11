@@ -40,27 +40,32 @@ Only write what you really did. If you did not do something, do not claim it. Ea
 2. Add your rows to `logs/weekly_log.csv` (one row per week you worked).
 3. Read the part of the report and slides that is yours, fix anything wrong, and be ready to explain it on Friday.
 
-**Thotagamuwage Sudesh Nimesha (Method A, statistics)**
-- Read `phase1/src/models/tfidf_lr.py` and `phase1/src/stats.py`. Run `python phase1/tests/test_stats.py` and `python phase1/tests/test_evaluate.py`.
-- Add a short note to `logs/decision_log.md` if you would change anything, and mark your TODO rows in `logs/TODO.md` as reviewed.
-- Presents: Method A, the statistics (bootstrap and McNemar), and the leakage/stratification slide.
+**Xing Liao (data: loading, leakage removal, stratified sampling, splits)**
+- Read `phase1/src/prepare.py`, `phase1/src/splits.py` and `phase1/src/ablation.py`.
+- Run `python phase1/src/prepare.py --source kaggle --n 20000` and check the funnel numbers match `phase1/results/README.md` (701,787 raw, 483,715 clean).
+- Mark your TODO rows in `logs/TODO.md` as reviewed. Note anything you would change in `logs/decision_log.md`.
+- Presents: the data, leakage control, splits, and the leakage/stratification slide.
 
-**Jaskamal (data, leakage, splits)**
-- Read `phase1/src/prepare.py` and `phase1/src/splits.py`. Run `python phase1/src/prepare.py --source kaggle --n 20000` and check the funnel numbers match `phase1/results/README.md`.
-- Mark your TODO rows as reviewed. Note anything you would change in `logs/decision_log.md`.
-- Presents: the data, leakage control, splits.
-
-**Zohaib Jawaid (Method B)**
-- Read `phase1/src/models/roberta.py` and the Colab notebook. Add a short "Method B setup" note to `phase1/results/README.md` (GPU, run time about 16 min per run, 20k training subsample, 3 replicates).
+**Jaskamal (Method A, TF-IDF + logistic regression, the simplest method)**
+- Read `phase1/src/models/tfidf_lr.py` (about 90 lines). Run one model: `cd phase1 && python run.py --source kaggle --model tfidf --features text --split random`.
+- Write 3 to 5 lines in your log on how it works: words become TF-IDF scores, logistic regression learns which words point to which class, the setting C is picked on the validation set.
 - Mark your TODO rows as reviewed.
-- Presents: Method B and the comparison table.
+- Presents: Method A.
 
-**Xing Liao (Phase II, ethics)**
-- Start `phase2/README.md`: the triage assistant plan, what a moderator would see, the explanation method, and the main ethics risks (labels are subreddits not diagnoses, false alarms, privacy).
-- Presents: limits and Phase II.
+**Thotagamuwage Sudesh Nimesha (statistics, interpretation, comparison with the papers)**
+- Read `phase1/src/stats.py`. Run `python phase1/tests/test_stats.py` and `python phase1/tests/test_evaluate.py`.
+- Write a short "comparison with the papers" note in `phase1/results/README.md`: our numbers next to the anchor paper (0.722 / 0.738), Low et al. (weighted F1 0.851, different label set) and MentalBERT, and why they are or are not comparable.
+- Presents: statistics (replicates, bootstrap, McNemar), the reproduction slide and the timing table.
+
+**Zohaib Jawaid (model explanations, kept simple)**
+- Open `phase1/results/kaggle/final/top_words_random.json` (the words Method A relies on most for each class) and `phase1/figures/fig5_confusion_A_temporal_late.png` (which classes get mixed up).
+- Write a short "What the model looks at" section in `phase1/results/README.md`: 2 to 3 top words per class, and the two classes most often confused, in plain words.
+- Presents: one slide or one minute on what the model looks at.
 
 **Abhinav Pandey (lead)**
-- Presents: problem, question, Method C, reproduction, timing results, findings.
+- Presents: problem, question, methodology, Method B and C, results, findings.
+
+**Phase II** (triage interface, explanations, ethics) is shared by everyone. We will split it after Friday.
 
 ## 4. How to commit
 
