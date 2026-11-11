@@ -19,6 +19,7 @@ Saeed and Ahmed (2025). They added posting-time features to a BiLSTM and reporte
 Do posting-time features significantly improve classification over a strong text-only model, and how much does each method lose when trained on earlier posts and tested on later ones?
 
 **What did you find?**
+
 1. Timing does not reliably help. For the best model the change is zero.
 2. The text model matters much more. MentalRoBERTa gets 0.68 macro F1, TF-IDF 0.64, the BiLSTM 0.61.
 3. Later posts were not harder within Nov 2021 to Nov 2022.
@@ -50,6 +51,7 @@ Kept 2021 and 2022 like the paper, dropped NSFW posts, empty or deleted posts, a
 When the model can "cheat", seeing the answer in the input or the same post in training and test. Then the score looks better than the model really is.
 
 **What leakage did you remove?**
+
 - Subreddit mentions like "r/depression" or "this sub" (6,741 posts had one). The text would name its own label.
 - The same text posted under two different labels (cross-posts), because it has two right answers.
 - Duplicate posts, so the same post cannot be in both train and test.
@@ -75,6 +77,7 @@ Time and memory on a free GPU and an 8 GB laptop. 60k posts per replicate times 
 ## 3. Splits (Jaskamal)
 
 **What splits did you use?**
+
 - Random (80/20): the paper's setup.
 - Same-size random: random, but the training set is cut to the size of the time split.
 - Later period: train on Nov 2021 to Jun 2022, test on Aug to Nov 2022.
@@ -97,6 +100,7 @@ In this file depression, bipolar and schizophrenia posts basically start in Nov 
 Macro F1 gives every class equal weight. Schizophrenia is only 4% of posts and anxiety is 33%. With accuracy, a model could ignore the small classes and still look good. In mental health the small classes matter, so we want a metric that punishes ignoring them.
 
 **What are precision, recall and F1, simply?**
+
 - Precision: of the posts we flagged as depression, how many really were.
 - Recall: of all the real depression posts, how many we found.
 - F1: one number that is high only when both are high (their harmonic mean).
@@ -116,6 +120,7 @@ It hides poor performance on small classes. A review we read (Cao et al. 2024) f
 ## 5. Methods (each owner leads)
 
 **Why these three methods?**
+
 - A, TF-IDF + logistic regression (Sudesh): the simple classic baseline used by Low et al. Fast, and hard to beat.
 - B, MentalRoBERTa (Zohaib): a transformer pretrained on mental-health Reddit. The strong text model the anchor paper never compared with.
 - C, BiLSTM with cross-modal attention (Abhinav): the anchor paper's own model, which we rebuilt.
@@ -130,6 +135,7 @@ RoBERTa is a language model that read huge amounts of text. MentalRoBERTa read e
 An LSTM reads words in order and remembers context. "Bi" means it reads left to right and right to left. The paper adds a second LSTM over the 6 time features and an attention layer that learns how much to trust text vs time for each post.
 
 **How did you add time features to each model?**
+
 - A: one-hot encoded weekday, month, hour, and flags, joined to the TF-IDF features.
 - B: the 6 time features scaled to 0 to 1 and joined to the [CLS] vector before the last layer.
 - C: exactly as the paper: an LSTM over the 6 features, then attention.
@@ -193,6 +199,7 @@ mentalillness, because it is a general community that overlaps with all others.
 ## 8. Tools and compute (Abhinav / Zohaib)
 
 **What did you run it on?**
+
 - MacBook with Apple M2 chip and 8 GB memory: data prep, Method A, Method C (using the Mac GPU through PyTorch "MPS"). A Method C run took about 70 seconds to 6 minutes.
 - Google Colab with a free Tesla T4 GPU: Method B. About 16 minutes per run, 12 runs.
 - Kaggle: source of the dataset, downloaded with the Kaggle API.
@@ -203,6 +210,7 @@ mentalillness, because it is a general community that overlaps with all others.
 We measured it: 20 training steps took 564 seconds on the Mac, and a run needs about 2,500 steps. Not feasible.
 
 **Any problems along the way?**
+
 - Colab disconnected once during the night and we lost one unfinished replicate. We reran it; the reruns gave identical scores because seeds are fixed.
 - An early Method C version was 6x too slow on the Mac GPU because of one PyTorch function (sequence packing). We removed it, with the same score.
 - A bug in our split code once hid a crash and left an old file. We caught it because results did not change, fixed it, and reran everything.
@@ -218,6 +226,7 @@ Yes. Fixed seeds, all code and settings in the repo, every prediction file saved
 Yes. We used AI coding assistants to help write and debug code and to draft text. The course allows this. We designed the study, made the decisions, ran the experiments, checked every result and can explain every step.
 
 **How did you make sure the AI did it right?**
+
 - Tests with known answers (the F1 example, the bootstrap and McNemar tests, the memorisation test).
 - Sanity checks: time-only scores sit at chance, top words per class make sense.
 - Results checked against the paper's reported numbers.
