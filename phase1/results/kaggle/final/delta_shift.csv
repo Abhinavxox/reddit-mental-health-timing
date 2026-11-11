@@ -1,3 +1,4 @@
 model,n_reps,delta_macro_f1,ci_low,ci_high,ci_excludes_0
 bilstm,5,-0.0012,-0.0075,0.0052,False
+roberta,2,0.0042,-0.0065,0.0148,False
 tfidf,5,-0.0006,-0.0074,0.0062,False

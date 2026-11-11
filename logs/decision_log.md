@@ -138,3 +138,10 @@ The paper released no code, so every choice below is ours. Each is also a possib
 **D31. The slow run (8,075 s) is kept, not rerun.** The laptop was busy or asleep, the score (0.621) is in line with the others and the seed is fixed, so rerunning would not change the numbers.
 
 **D32. Method B access.** The Hugging Face token worked only after the model terms were accepted on the account. The token was shared in chat, so it should be revoked after Method B finishes.
+
+**D33. Two data-preparation ablations, run because "applied AI" asks whether the cleaning matters.** (`phase1/src/ablation.py`, Method A, 20k, 5 replicates)
+- Leakage: full cleaning vs keep mentions vs keep duplicates and cross-posts vs no control. Reported score and score on clean-only posts. Result: no difference beyond noise (0.620 to 0.624), because leakage is only about 3% of posts. Cleaning is kept for validity, not for score.
+- Stratification: label x month vs plain random vs class balanced, all scored on one random reference set from the full clean data. Result: stratified equals plain random (0.623 vs 0.624), class balanced is lower (0.607).
+- Not claimed: that leakage never matters. It would matter more with a model that memorises (a pretrained transformer) or a smaller dataset, which we did not test.
+
+**D34. Slides built from the results files** (`slides/deck_data.py` then `slides/build_deck.js`) so the numbers can be refreshed when Method B rep 2 arrives.
