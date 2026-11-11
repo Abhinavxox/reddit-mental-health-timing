@@ -12,7 +12,7 @@ The anchor paper (Saeed & Ahmed, 2025) reports that adding posting time to a BiL
 
 ## What we asked and what we found (Phase I)
 
-Applied AI means the data work counts as much as the model. We answered three questions on the Kaggle data (Methods A, B and C, 5 replicates for A and C, 2 to 3 for B, 95% bootstrap intervals). Details in `phase1/results/README.md`, figures in `phase1/figures/`, report draft in `paper/`, slides in `slides/`.
+Applied AI means the data work counts as much as the model. We answered three questions on the Kaggle data (Methods A, B and C, 5 replicates for A and C, 3 for B, 95% bootstrap intervals). Details in `phase1/results/README.md`, figures in `phase1/figures/`, report draft in `paper/`, slides in `slides/`.
 
 | Question | Answer |
 |---|---|
@@ -57,7 +57,7 @@ Each method is trained text-only and text + time, on a random split and on time-
 | Oct 9, 2026 | Literature review & research question report | Submitted · 23 / 25 |
 | Oct 22, 2026 | Phase I proposal presentation | Submitted · awaiting grade |
 | Nov 2026 | Prototype: data pipeline + Method A (Milestone 1) | Done |
-| Nov 2026 | Full experiments: A, B, C, replicates, time shift (Milestone 2) | Done (B third replicate pending) |
+| Nov 2026 | Full experiments: A, B, C, replicates, time shift (Milestone 2) | Done |
 | Nov 2026 | Phase I conference-style report (LaTeX) and slides | Draft in `paper/` and `slides/` |
 | Nov 13 – Dec 4, 2026 | Phase II: moderator triage assistant | Planned |
 
