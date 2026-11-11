@@ -1,6 +1,6 @@
 # Milestone 2 results (final runs: Methods A and C, 5 replicates)
 
-**5 replicates, each a fresh 60k stratified sample, fresh split and fresh model initialisation. Mean over replicates, 95% paired bootstrap intervals (1000 resamples). Method B (MentalRoBERTa) is not run yet, see the TODO.** Raw tables are in `final/` (`summary.csv`, `delta_time.csv`, `delta_shift.csv`, `mcnemar.csv`), figures in `phase1/figures/`.
+**5 replicates, each a fresh 60k stratified sample, fresh split and fresh model initialisation. Mean over replicates, 95% paired bootstrap intervals (1000 resamples). Method B (MentalRoBERTa) has 3 replicates on `random_matched` and `temporal_late` only (20k training subsample, Colab).** Raw tables are in `final/` (`summary.csv`, `delta_time.csv`, `delta_shift.csv`, `mcnemar.csv`), figures in `phase1/figures/`.
 
 ## Macro F1 (mean of 5 replicates)
 
@@ -11,6 +11,8 @@
 | C BiLSTM | text | 0.630 | 0.609 | 0.608 |
 | C BiLSTM | text + time (attention) | 0.630 | 0.614 | 0.614 |
 | C BiLSTM | text + time (concat) | 0.632 | 0.605 | 0.605 |
+| B MentalRoBERTa | text | not run | 0.671 | 0.679 |
+| B MentalRoBERTa | text + time | not run | 0.671 | 0.677 |
 
 Weighted F1 on `random`: A text 0.741, A text + time 0.743, C text 0.730, C text + time 0.730. The anchor paper reports 0.7222 (text) and 0.7376 (text + time).
 
@@ -21,12 +23,13 @@ Weighted F1 on `random`: A text 0.741, A text + time 0.743, C text 0.730, C text
 | A | +0.001 [-0.001, +0.003] | -0.003 [-0.006, -0.000] | -0.016 [-0.018, -0.013] |
 | C attention | -0.001 [-0.005, +0.004] | +0.005 [+0.001, +0.009] | +0.006 [+0.002, +0.010] |
 | C concat | +0.002 [-0.003, +0.005] | -0.004 [-0.008, +0.000] | -0.003 [-0.006, +0.001] |
+| B | not run | +0.000 [-0.003, +0.003] | -0.002 [-0.005, +0.001] |
 
 ## What this shows
 
 1. **The anchor paper's timing gain is not reproduced.** On the random split (the paper's setup) time features change macro F1 by an amount whose interval includes 0 for every model. The only gains are +0.005 and +0.006 for the weaker BiLSTM with attention fusion on two splits. Time never helps the stronger TF-IDF model, and hurts it on `temporal_late`.
-2. **The valid time shift costs nothing measurable.** `temporal_late` minus `random_matched` (text only): BiLSTM -0.001 [-0.008, +0.005], TF-IDF -0.001 [-0.007, +0.006].
-3. **TF-IDF + LR is at least as good as the BiLSTM.** McNemar favours TF-IDF on `random_matched` and `temporal_late` (p < 0.001), BiLSTM on `random` by a small margin (p = 0.002).
+2. **The valid time shift costs nothing measurable.** `temporal_late` minus `random_matched` (text only): BiLSTM -0.001 [-0.008, +0.005], TF-IDF -0.001 [-0.007, +0.006], MentalRoBERTa +0.008 [-0.001, +0.017].
+3. **MentalRoBERTa is the best text model** (about 0.68 vs 0.64 TF-IDF vs 0.61 BiLSTM, McNemar p < 0.001), and time adds nothing to it. **TF-IDF + LR is at least as good as the BiLSTM.** McNemar favours TF-IDF on `random_matched` and `temporal_late` (p < 0.001), BiLSTM on `random` by a small margin (p = 0.002).
 4. **The 2021 to 2022 split stays confounded.** Method A text + time falls to 0.248 there, and 0.543 without month and day (text only 0.565).
 5. **Time alone is at chance** (0.15 on random, uniform random guess 0.145).
 

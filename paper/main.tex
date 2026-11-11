@@ -7,7 +7,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Saeed and Ahmed (2025) report that adding posting-time features to a BiLSTM text classifier improves six-way classification of mental-health subreddits (weighted F1 0.7376 versus 0.7222). We test that claim against a strong text-only baseline (TF-IDF with logistic regression) and a fine-tuned MentalRoBERTa, using five replicates, paired bootstrap intervals, and a time-shift split that avoids a data-collection artefact we found in the shared dataset. For TF-IDF and the BiLSTM we find no reliable gain from time features on the paper's own random split, a gain of at most 0.006 macro F1 for the weaker BiLSTM on two splits, and a small loss for TF-IDF under time shift. Training on earlier posts and testing on later ones costs no measurable accuracy over Nov 2021 to Nov 2022. \textbf{[Method B results to be added.]}
+Saeed and Ahmed (2025) report that adding posting-time features to a BiLSTM text classifier improves six-way classification of mental-health subreddits (weighted F1 0.7376 versus 0.7222). We test that claim against a strong text-only baseline (TF-IDF with logistic regression) and a fine-tuned MentalRoBERTa, using five replicates, paired bootstrap intervals, and a time-shift split that avoids a data-collection artefact we found in the shared dataset. For TF-IDF and the BiLSTM we find no reliable gain from time features on the paper's own random split, a gain of at most 0.006 macro F1 for the weaker BiLSTM on two splits, and a small loss for TF-IDF under time shift. MentalRoBERTa is the strongest text model (macro F1 about 0.68) and time features add nothing to it (change $-0.002$ to $0.000$, intervals include zero). Training on earlier posts and testing on later ones costs no measurable accuracy over Nov 2021 to Nov 2022.
 \end{abstract}
 
 \section{Introduction}
@@ -25,6 +25,9 @@ Saeed and Ahmed (2025) combine a BiLSTM text branch with an LSTM over time featu
 \paragraph{Methods.} \textbf{A:} TF-IDF (1 to 2 grams, 50k features) with class-weighted logistic regression, $C$ tuned on a validation set. \textbf{B:} MentalRoBERTa fine-tuned with the \texttt{[CLS]} vector, 128 tokens, 2 epochs, 20k training subsample. \textbf{C:} the anchor paper's BiLSTM with an LSTM time branch and shared attention, rebuilt from its equations (embedding 128, BiLSTM 64, dropout 0.6, RMSprop). Each method is run with text only and with text plus time features (month, day, weekday, weekend, hour, working hour); C also has a concatenation variant. A design check shows the BiLSTM can memorise 300 posts.
 \paragraph{Statistics.} A replicate is a fresh sample, split and model initialisation (five replicates). Differences use a paired bootstrap of test posts (1000 resamples); models are compared with McNemar's test.
 
+\section{Data Preparation Ablations}
+We also tested whether our preparation steps change the score (Method A, 20k posts, five replicates). Keeping subreddit mentions, duplicates and cross-posts, or both, gives macro F1 0.620 to 0.624 against 0.620 with full cleaning, within noise, because leakage is only about 3\% of posts. The cleaning therefore protects validity and does not raise the score. Scored on one common random reference set, label-by-month stratified and plain random samples both reach 0.623 to 0.624, while a class-balanced sample reaches 0.607 on the real class mix. Stratification mainly guarantees that every class and month is present for the time splits.
+
 \section{Reproduction of the Anchor Paper}
 Table~\ref{tab:repro} compares weighted F1 on the random split. Our BiLSTM matches the paper's text-only level but not its gain from time.
 \begin{table}[h]\centering\small
@@ -38,29 +41,29 @@ Possible causes of the gap, all choices we had to make because no code was relea
 \begin{tabular}{llccc}\toprule Model & Features & random & matched & late \\\midrule
 A & text & .642 & .636 & .636 \\ A & text+time & .643 & .633 & .620 \\
 C & text & .630 & .609 & .608 \\ C & text+time & .630 & .614 & .614 \\
-B & text & \multicolumn{3}{c}{\textbf{[to add]}} \\ B & text+time & \multicolumn{3}{c}{\textbf{[to add]}} \\\bottomrule\end{tabular}
-\caption{Macro F1, mean of five replicates (B: three).}\label{tab:main}
+B & text & -- & .671 & .679 \\ B & text+time & -- & .671 & .677 \\\bottomrule\end{tabular}
+\caption{Macro F1, mean of five replicates (B: three, not run on the random split).}\label{tab:main}
 \end{table}
 McNemar's test favours A over C on \texttt{random\_matched} and \texttt{temporal\_late} ($p<0.001$) and C over A on \texttt{random} by a small margin ($p=0.002$).
 
 \section{Research Question: Does Timing Help?}
 \begin{figure}[h]\centering\includegraphics[width=\columnwidth]{fig2_delta_time.png}\caption{Change in macro F1 from adding time features, 95\% bootstrap interval.}\label{fig:delta}\end{figure}
-On the random split every interval includes zero. For A the change is $-0.003$ on \texttt{random\_matched} and $-0.016$ on \texttt{temporal\_late}, so time hurts under shift. For C with attention the change is $+0.005$ and $+0.006$ (intervals exclude zero but are about half a point), and concatenation gives no gain. Time alone scores 0.15, the uniform random-guess level (0.145). Posting-time features therefore do not add reliable signal over text.
+On the random split every interval includes zero. For A the change is $-0.003$ on \texttt{random\_matched} and $-0.016$ on \texttt{temporal\_late}, so time hurts under shift. For C with attention the change is $+0.005$ and $+0.006$ (intervals exclude zero but are about half a point), and concatenation gives no gain. For MentalRoBERTa it is $0.000$ [$-0.003$, $+0.003$] and $-0.002$ [$-0.005$, $+0.001$]. Time alone scores 0.15, the uniform random-guess level (0.145). Posting-time features therefore do not add reliable signal over text.
 
 \section{Extension Experiment: Time Robustness}
-Macro F1 on \texttt{temporal\_late} minus \texttt{random\_matched}, text only, is $-0.001$ [$-0.008$, $+0.005$] for C and $-0.001$ [$-0.007$, $+0.006$] for A, so training on earlier posts costs nothing measurable over these months. The confounded 2021 to 2022 split looks much worse: A with time features falls to 0.248, and to 0.543 when month and day are removed, because month features learn the class mix of 2021 (Fig.~\ref{fig:shift}).
+Macro F1 on \texttt{temporal\_late} minus \texttt{random\_matched}, text only, is $-0.001$ [$-0.008$, $+0.005$] for C, $-0.001$ [$-0.007$, $+0.006$] for A and $+0.008$ [$-0.001$, $+0.017$] for B, so training on earlier posts costs nothing measurable over these months. The confounded 2021 to 2022 split looks much worse: A with time features falls to 0.248, and to 0.543 when month and day are removed, because month features learn the class mix of 2021 (Fig.~\ref{fig:shift}).
 \begin{figure}[h]\centering\includegraphics[width=\columnwidth]{fig3_time_shift.png}\caption{Same-period versus later-period macro F1.}\label{fig:shift}\end{figure}
 \begin{figure}[h]\centering\includegraphics[width=\columnwidth]{fig4_class_mix_by_month.png}\caption{Class share by month: three classes only exist from Nov 2021.}\label{fig:mix}\end{figure}
 
 \section{Results and Analysis}
-The strongest text-only model is the simplest, and time features add nothing for it. The BiLSTM's small gain may come from time acting as a weak regulariser for a weaker text encoder, which we have not tested. Errors concentrate in the small and noisy classes, mainly mentalillness (Fig.~\ref{fig:conf}).
+The strongest text model is the pretrained MentalRoBERTa (about 0.68 macro F1 against 0.64 for TF-IDF and 0.61 for the BiLSTM), and time features add nothing for it. The BiLSTM's small gain may come from time acting as a weak regulariser for a weaker text encoder, which we have not tested. Errors concentrate in the small and noisy classes, mainly mentalillness (Fig.~\ref{fig:conf}).
 \begin{figure}[h]\centering\includegraphics[width=0.8\columnwidth]{fig5_confusion_A_temporal_late.png}\caption{Method A, text only, \texttt{temporal\_late}.}\label{fig:conf}\end{figure}
 
 \section{Limitations}
-Labels are subreddits and not diagnoses. Condition names remain in the text. The Kaggle file has no author column, so same-user leakage cannot be checked there (it is checked on the Zenodo data). Method C is our rebuild. Method B uses a 20k subsample and three replicates because of free GPU limits, so cross-method gaps partly reflect training size. The valid shift window is short (about nine months).
+Labels are subreddits and not diagnoses. Condition names remain in the text. The Kaggle file has no author column, so same-user leakage cannot be checked there (it is checked on the Zenodo data). Method C is our rebuild. Method B uses a 20k training subsample and three replicates on two splits because of free GPU limits, so cross-method gaps partly reflect training size. The valid shift window is short (about nine months).
 
 \section{Research Findings}
-(1) The anchor paper's timing gain is not reproduced against a strong text baseline. (2) Time features can hurt under time shift. (3) No measurable loss from training on earlier posts within Nov 2021 to Nov 2022. (4) The 2021 to 2022 split used by the paper is confounded by a collection change. \textbf{[Update with Method B.]}
+(1) The anchor paper's timing gain is not reproduced against a strong text baseline. (2) Time features can hurt under time shift. (3) No measurable loss from training on earlier posts within Nov 2021 to Nov 2022. (4) The 2021 to 2022 split used by the paper is confounded by a collection change.
 
 \section{Conclusion}
 Timing does not reliably matter for classifying these subreddits once a strong text model is used, and claims of timing gains should be checked on splits that avoid collection artefacts.

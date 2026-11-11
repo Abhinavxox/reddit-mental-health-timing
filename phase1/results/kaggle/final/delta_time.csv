@@ -5,8 +5,8 @@ bilstm,random_matched,text_time,text,5,0.0048,0.0007,0.0089,True
 bilstm,random_matched,text_time_concat,text,5,-0.0038,-0.0078,0.0004,False
 bilstm,temporal_late,text_time,text,5,0.0061,0.0021,0.0101,True
 bilstm,temporal_late,text_time_concat,text,5,-0.0027,-0.0064,0.0009,False
-roberta,random_matched,text_time,text,2,-0.0028,-0.0068,0.0015,False
-roberta,temporal_late,text_time,text,2,-0.0017,-0.0053,0.0019,False
+roberta,random_matched,text_time,text,3,0.0001,-0.0032,0.0032,False
+roberta,temporal_late,text_time,text,3,-0.0021,-0.0051,0.0012,False
 tfidf,random,text_time,text,5,0.0012,-0.001,0.0032,False
 tfidf,random,text_time_nomonth,text,5,-0.0005,-0.0025,0.0015,False
 tfidf,random_matched,text_time,text,5,-0.0032,-0.0059,-0.0004,True

@@ -1,8 +1,8 @@
 split,model_a,model_b,only_a_right,only_b_right,chi2,p_value
 random,bilstm,tfidf,5099,4796,9.21718,0.002398
-random_matched,bilstm,roberta,1108,2168,342.332418,0.0
+random_matched,bilstm,roberta,1667,3253,510.614837,0.0
 random_matched,bilstm,tfidf,4846,5185,11.389094,0.000739
-random_matched,roberta,tfidf,2408,1412,259.168848,0.0
-temporal_late,bilstm,roberta,1099,2453,515.374155,0.0
+random_matched,roberta,tfidf,3574,2168,343.787008,0.0
+temporal_late,bilstm,roberta,1654,3574,704.391928,0.0
 temporal_late,bilstm,tfidf,5060,5602,27.450853,0.0
-temporal_late,roberta,tfidf,2629,1516,298.321834,0.0
+temporal_late,roberta,tfidf,3917,2264,441.531144,0.0
