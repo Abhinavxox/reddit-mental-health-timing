@@ -21,4 +21,4 @@
 | Phase I report draft (LaTeX in `paper/`) | Group | Draft started |
 | Interpretation and comparison with the papers (reproduction table, related-work comparison) | Sudesh Nimesha | To do |
 | Leakage and stratification test (`phase1/src/ablation.py`) | Xing Liao | Done by Abhinav, needs owner review |
-| Model explanations: top words per class and confusion matrix, short write-up in `phase1/results/README.md` | Zohaib Jawaid | To do |
+| Model explanations: top words per class and confusion matrix, short write-up in `phase1/results/README.md` | Zohaib Jawaid | Done ("What the model looks at"), needs group review |

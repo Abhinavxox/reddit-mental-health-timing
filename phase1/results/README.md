@@ -40,6 +40,30 @@ Weighted F1 on `random`: A text 0.741, A text + time 0.743, C text 0.730, C text
 - Labels are subreddits, not diagnoses. Condition names stay in the text (D3).
 - One run (BiLSTM, concat, rep 4) took far longer than the others because the laptop was busy. Scores are unaffected.
 
+## What the model looks at
+
+Method A (TF-IDF + logistic regression, text only) gives each word a weight per class, so we can read off the words it relies on most (`final/top_words_random.json`) and see which classes it mixes up (`phase1/figures/fig5_confusion_A_temporal_late.png`).
+
+**Top words per class**
+
+| Class | Top words |
+|---|---|
+| anxiety | anxiety, anxious, panic |
+| bipolar | bipolar, manic, lamictal |
+| bpd | bpd, fp ("favourite person"), dbt |
+| depression | depression, depressed, suicide |
+| mentalillness | mental, ocd, adhd |
+| schizophrenia | schizophrenia, voices, delusions |
+
+The model mostly looks for the name of the condition, plus medications (lamictal), symptoms (panic, voices, delusions) and therapy (dbt). It finds people *saying* what they have, which is easier than spotting risk from how someone writes. Labels are subreddits, not diagnoses.
+
+**The two classes most often confused**
+
+1. **mentalillness is taken for depression** (35% of mentalillness posts). It is a general subreddit where people write about many conditions, so it has no words of its own.
+2. **bpd is taken for depression** (18% of bpd posts).
+
+In both cases the errors go into depression, the largest class: when the model is unsure, it picks depression.
+
 ---
 
 # Milestone 1 results (prototype, Method A)
