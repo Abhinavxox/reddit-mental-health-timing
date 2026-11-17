@@ -1,4 +1,4 @@
-model,n_reps,delta_macro_f1,ci_low,ci_high,ci_excludes_0
-bilstm,5,-0.0012,-0.0075,0.0052,False
-roberta,3,0.0081,-0.0008,0.0166,False
-tfidf,5,-0.0006,-0.0074,0.0062,False
+model,n_reps,delta_macro_f1,ci_low,ci_high,ci_excludes_0,rep_sd,rep_ci_low,rep_ci_high,rep_p,rep_p_holm,reliable
+bilstm,5,-0.0009,-0.0078,0.0059,False,0.0081,-0.0109,0.0091,0.8133,1.0,False
+roberta,3,0.0086,-0.0003,0.0171,False,0.0066,-0.0078,0.0248,0.1539,0.4617,False
+tfidf,5,-0.0005,-0.0074,0.0062,False,0.0056,-0.0075,0.0065,0.8464,1.0,False

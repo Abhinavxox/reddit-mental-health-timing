@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from stats import boot_diff, macro_f1, mcnemar  # noqa: E402
+from stats import boot_diff, holm, macro_f1, mcnemar, rep_interval  # noqa: E402
 
 
 def make(y, pred):
@@ -47,6 +47,23 @@ def test_macro_f1_known_value():
 def test_mcnemar_counts():
     y = np.array([0, 0, 0, 0])
     assert mcnemar(make(y, [0, 0, 1, 1]), make(y, [0, 1, 0, 1])) == (1, 1)
+
+
+def test_rep_interval_consistent_and_noisy_gains():
+    # same mean gain: consistent across replicates is significant, sign-flipping is not
+    sd, lo, hi, p = rep_interval([0.005, 0.006, 0.004, 0.005, 0.005])
+    assert lo > 0 and p < 0.01 and abs(sd - np.std([0.005, 0.006, 0.004, 0.005, 0.005], ddof=1)) < 1e-12
+    _, lo, hi, p = rep_interval([0.002, 0.011, 0.007, -0.008, 0.012])
+    assert lo < 0 < hi and p > 0.05
+    assert np.isnan(rep_interval([0.01])[3])
+
+
+def test_holm_known_values():
+    # sorted p 0.01, 0.02, 0.04 times 3, 2, 1 gives 0.03, 0.04, 0.04 (kept monotone)
+    assert np.allclose(holm([0.04, 0.01, 0.02]), [0.04, 0.03, 0.04])
+    assert np.allclose(holm([0.5, 0.9]), [1.0, 1.0])
+    out = holm([0.01, np.nan, 0.03])
+    assert np.isnan(out[1]) and np.allclose(out[[0, 2]], [0.02, 0.03])
 
 
 if __name__ == "__main__":
