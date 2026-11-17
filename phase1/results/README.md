@@ -1,6 +1,6 @@
 # Milestone 2 results (final runs: Methods A and C, 5 replicates)
 
-**5 replicates, each a fresh 60k stratified sample, fresh split and fresh model initialisation. Mean over replicates, 95% paired bootstrap intervals (1000 resamples). Method B (MentalRoBERTa) has 3 replicates on `random_matched` and `temporal_late` only (20k training subsample, Colab).** Raw tables are in `final/` (`summary.csv`, `delta_time.csv`, `delta_shift.csv`, `mcnemar.csv`), figures in `phase1/figures/`.
+**5 replicates, each a fresh 60k stratified sample, fresh split and fresh model initialisation. Mean over replicates, 95% paired bootstrap intervals (1000 resamples), plus a t-test over the replicates (Holm-corrected) to check that a difference holds from run to run. Method B (MentalRoBERTa) has 3 replicates on `random_matched` and `temporal_late` only (20k training subsample, Colab).** Raw tables are in `final/` (`summary.csv`, `delta_time.csv`, `delta_shift.csv`, `mcnemar.csv`), figures in `phase1/figures/`.
 
 ## Macro F1 (mean of 5 replicates)
 
@@ -20,16 +20,30 @@ Weighted F1 on `random`: A text 0.741, A text + time 0.743, C text 0.730, C text
 
 | Model | random | random_matched | temporal_late |
 |---|---|---|---|
-| A | +0.001 [-0.001, +0.003] | -0.003 [-0.006, -0.000] | -0.016 [-0.018, -0.013] |
+| A | +0.001 [-0.001, +0.003] | -0.003 [-0.006, -0.001] | **-0.016 [-0.018, -0.013]** |
 | C attention | -0.001 [-0.005, +0.004] | +0.005 [+0.001, +0.009] | +0.006 [+0.002, +0.010] |
-| C concat | +0.002 [-0.003, +0.005] | -0.004 [-0.008, +0.000] | -0.003 [-0.006, +0.001] |
+| C concat | +0.002 [-0.003, +0.006] | -0.004 [-0.007, +0.000] | -0.003 [-0.007, +0.001] |
 | B | not run | +0.000 [-0.003, +0.003] | -0.002 [-0.005, +0.001] |
+
+Bold: the only change that also holds across replicates (see the check below).
+
+**Does it hold from run to run?** The bootstrap interval only measures which test posts were drawn. It does not see that a fresh sample, split and initialisation can move the result. For each text + time comparison whose bootstrap interval excludes 0, the table below also gives a 95% t interval over the per-replicate changes and the Holm-corrected p-value over all 16 comparisons in `final/delta_time.csv`.
+
+| Model | Split | Change | Bootstrap CI | Replicate CI | Holm p | Holds? |
+|---|---|---|---|---|---|---|
+| C attention | random_matched | +0.005 | [+0.001, +0.009] | [-0.005, +0.015] | 1.00 | no |
+| C attention | temporal_late | +0.006 | [+0.002, +0.010] | [-0.001, +0.013] | 0.77 | no |
+| A | random_matched | -0.003 | [-0.006, -0.001] | [-0.006, -0.000] | 0.63 | no |
+| A | temporal_late | -0.016 | [-0.018, -0.013] | [-0.019, -0.012] | 0.005 | **yes** |
+| A | temporal_2021_22 (confounded) | -0.318 | [-0.321, -0.315] | [-0.348, -0.287] | < 0.001 | yes |
+
+The BiLSTM's per-replicate changes range from -0.008 to +0.012 on `random_matched` and from +0.000 to +0.013 on `temporal_late`, so its gain depends on the run.
 
 ## What this shows
 
-1. **The anchor paper's timing gain is not reproduced.** On the random split (the paper's setup) time features change macro F1 by an amount whose interval includes 0 for every model. The only gains are +0.005 and +0.006 for the weaker BiLSTM with attention fusion on two splits. Time never helps the stronger TF-IDF model, and hurts it on `temporal_late`.
-2. **The valid time shift costs nothing measurable.** `temporal_late` minus `random_matched` (text only): BiLSTM -0.001 [-0.008, +0.005], TF-IDF -0.001 [-0.007, +0.006], MentalRoBERTa +0.008 [-0.001, +0.017].
-3. **MentalRoBERTa is the best text model** (about 0.68 vs 0.64 TF-IDF vs 0.61 BiLSTM, McNemar p < 0.001), and time adds nothing to it. **TF-IDF + LR is at least as good as the BiLSTM.** McNemar favours TF-IDF on `random_matched` and `temporal_late` (p < 0.001), BiLSTM on `random` by a small margin (p = 0.002).
+1. **The anchor paper's timing gain is not reproduced.** On the random split (the paper's setup) time features change macro F1 by an amount whose interval includes 0 for every model. The +0.005 and +0.006 for the weaker BiLSTM with attention fusion do not hold across replicates. The only reliable effect of time features is a loss: -0.016 for TF-IDF on `temporal_late`.
+2. **The valid time shift costs nothing measurable.** `temporal_late` minus `random_matched` (text only): BiLSTM -0.001 [-0.008, +0.006], TF-IDF -0.001 [-0.007, +0.006], MentalRoBERTa +0.009 [-0.000, +0.017].
+3. **MentalRoBERTa is the best text model** (about 0.68 vs 0.64 TF-IDF vs 0.61 BiLSTM), and time adds nothing to it. McNemar's exact test is run on each replicate, because `temporal_late` has the same test posts in every replicate and pooling would count each post five times. MentalRoBERTa beats both other models in every replicate (largest p < 0.001). **TF-IDF + LR and the BiLSTM are about equal.** Which of the two gets more posts right changes between replicates (on `random_matched` one replicate favours the BiLSTM and two favour TF-IDF), and no direction holds in every replicate (Holm-corrected largest p 0.33 to 1.00).
 4. **The 2021 to 2022 split stays confounded.** Method A text + time falls to 0.248 there, and 0.543 without month and day (text only 0.565).
 5. **Time alone is at chance** (0.15 on random, uniform random guess 0.145).
 
@@ -39,6 +53,25 @@ Weighted F1 on `random`: A text 0.741, A text + time 0.743, C text 0.730, C text
 - Kaggle has no author column, same-user leakage cannot be checked there.
 - Labels are subreddits, not diagnoses. Condition names stay in the text (D3).
 - One run (BiLSTM, concat, rep 4) took far longer than the others because the laptop was busy. Scores are unaffected.
+
+## Comparison with the papers
+
+Weighted F1, because that is what the papers report. Ours is the mean over replicates.
+
+| Paper | Their model and data | Their number | Our closest number | Comparable? |
+|---|---|---|---|---|
+| Saeed & Ahmed 2025 (anchor) | BiLSTM, text only, Kaggle 2021 to 2022, 6 classes, one random split | 0.7222 | C text only, `random`: 0.730 (replicates 0.721 to 0.740) | Yes, mostly |
+| Saeed & Ahmed 2025 (anchor) | BiLSTM + time (cross-modal attention), same split | 0.7376 (+0.015) | C text + time, `random`: 0.730 (change -0.001) | Yes, mostly |
+| Low et al. 2020 | SGD linear model on TF-IDF + LIWC + sentiment (346 features), 15 subreddits | 0.851 | A text only: Kaggle `random` 0.741, Zenodo `random` 0.740 (Milestone 1, one seed) | No |
+| Ji et al. 2022 (MentalBERT) | MentalRoBERTa fine-tuned, SWMH (5 subreddits) and other benchmarks | 72.16 F1 | B text only, `random_matched`: 0.765 | No |
+
+**Anchor paper.** This is the one comparison that is close to like for like: the same Kaggle file, the same 2021 to 2022 filter, the same six classes and a stratified random split. Our differences are a 60k sample, leakage cleaning, and early stopping on a separate validation set (the paper picks the epoch on the set it reports). Our text-only BiLSTM lands at the paper's level, so the rebuild is sound. The time gain is where we differ. Their +0.015 comes from one split. Across our five replicates the text-only BiLSTM alone moves from 0.721 to 0.740, a spread larger than the whole claimed gain, and pairing any one of our text-only runs with any one text + time run gives a "gain" anywhere from -0.018 to +0.013. A single-split difference of 0.015 is therefore within what we see from run-to-run noise, and with replicates the gain is -0.001.
+
+**Low et al.** Their 0.851 is higher than our 0.74, but the task is different: 15 subreddits, many of them more distinct from each other than ours (for example addiction, autism, ADHD), with LIWC and sentiment features added, and posts from 2018 to 2020. Our label set has a general mentalillness class that overlaps with every other class (see "What the model looks at"). We use their method (TF-IDF + linear model) and their Zenodo data, not their number. On the six Zenodo subreddits that match ours, the same TF-IDF model gives 0.740, the same as on Kaggle.
+
+**MentalBERT.** Ji et al. report MentalRoBERTa on other benchmarks (for example 72.16 on SWMH and 93.38 on eRisk), not on this Kaggle data, so their scores cannot be compared with ours. What carries over is the ranking: the domain-pretrained transformer is the strongest text model in their paper and in ours, by about 0.04 macro F1 over TF-IDF here. The anchor paper did not include such a baseline.
+
+**What we add over all three.** None of the papers repeat runs or test significance. Our main claims (no timing gain, no loss under the valid time shift, MentalRoBERTa best) hold across replicates. The anchor paper's claim does not.
 
 ## What the model looks at
 
