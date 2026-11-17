@@ -153,3 +153,17 @@ The paper released no code, so every choice below is ours. Each is also a possib
 - Zohaib Jawaid takes model explanations (top words per class, which classes get confused). Method B was run by Abhinav on Colab.
 - Phase II (interface, explanations, ethics) is shared by everyone.
 - Papers each member reviewed do not change.
+
+---
+
+## Nov 17, 2026: review of the statistics (Sudesh Nimesha)
+
+**D36. A difference must also hold across replicates, not only inside the bootstrap interval.**
+- The paired bootstrap resamples test posts only. It does not see that a fresh sample, split and initialisation moves the result, which for the BiLSTM is larger than the timing effect (per-replicate changes -0.008 to +0.012).
+- `stats.py` now adds a t interval and t-test over the per-replicate changes, Holm-corrected over each table, and a `reliable` column (bootstrap CI excludes 0 and Holm p < 0.05). This refines the D30 rule.
+- Result: the BiLSTM's +0.005 and +0.006 are not reliable. The only reliable effect of time features is a loss for TF-IDF on `temporal_late` (-0.016) and on the confounded 2021 to 2022 split.
+- t-test over 5 (or 3) replicates has little power, so "not reliable" means "not shown", not "shown to be zero".
+
+**D37. McNemar is run per replicate with an exact test, not on pooled counts.**
+- `temporal_late` has the same 13,031 test posts in every replicate, so pooled counts used each post five times. All replicates also share one bootstrap resample for the same reason.
+- Result: MentalRoBERTa beats both other models in every replicate. TF-IDF vs BiLSTM has no consistent winner, so the earlier p = 0.002 and p < 0.001 are dropped.

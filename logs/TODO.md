@@ -15,10 +15,11 @@
 
 | Rerun the pipeline on the Kaggle data, add hour feature | Xing Liao | Done by Abhinav, needs owner review |
 | Size-matched random splits to separate shift from training size | Sudesh Nimesha | Done (random_matched) |
-| 5 replicates, bootstrap CIs, McNemar (Methods A, B and C) | Sudesh Nimesha | Done (`stats.py`), needs owner review |
+| 5 replicates, bootstrap CIs, McNemar (Methods A, B and C) | Sudesh Nimesha | Done, reviewed by owner: replicate-level tests and per-replicate McNemar added (D36, D37) |
+| Update report and slides where they quote the BiLSTM gain and the TF-IDF vs BiLSTM McNemar result | Sudesh Nimesha | To do |
 | Decide the temporal split for the paper: Kaggle 2021→2022 is confounded by collection (3 classes missing before Nov 2021). Use temporal_late | Group | To decide |
 | Mention the collection artifact as a finding about the anchor paper's data | Group | To discuss |
 | Phase I report draft (LaTeX in `paper/`) | Group | Draft started |
-| Interpretation and comparison with the papers (reproduction table, related-work comparison) | Sudesh Nimesha | To do |
+| Interpretation and comparison with the papers (reproduction table, related-work comparison) | Sudesh Nimesha | Done ("Comparison with the papers" in `phase1/results/README.md`), needs group review |
 | Leakage and stratification test (`phase1/src/ablation.py`) | Xing Liao | Done by Abhinav, needs owner review |
 | Model explanations: top words per class and confusion matrix, short write-up in `phase1/results/README.md` | Zohaib Jawaid | Done ("What the model looks at"), needs group review |
