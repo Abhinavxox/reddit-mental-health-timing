@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from stats import boot_diff, holm, macro_f1, mcnemar, rep_interval  # noqa: E402
+from stats import boot_diff, holm, macro_f1, mcnemar, mcnemar_p, rep_interval  # noqa: E402
 
 
 def make(y, pred):
@@ -47,6 +47,12 @@ def test_macro_f1_known_value():
 def test_mcnemar_counts():
     y = np.array([0, 0, 0, 0])
     assert mcnemar(make(y, [0, 0, 1, 1]), make(y, [0, 1, 0, 1])) == (1, 1)
+
+
+def test_mcnemar_p_exact():
+    assert mcnemar_p(5, 5) == 1.0 and mcnemar_p(0, 0) == 1.0
+    assert abs(mcnemar_p(0, 6) - 2 * 0.5 ** 6) < 1e-12  # all 6 discordant posts favour one model
+    assert mcnemar_p(1106, 885) < 0.001 and mcnemar_p(967, 969) > 0.9
 
 
 def test_rep_interval_consistent_and_noisy_gains():

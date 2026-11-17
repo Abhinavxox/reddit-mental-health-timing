@@ -4,7 +4,8 @@ Reads results/<source>/final/preds/*.npz (written by run.py --reps) and writes i
   summary.csv      mean and std over replicates of macro F1 and weighted F1 per model / features / split
   delta_time.csv   macro F1 (text + time) minus macro F1 (text), paired bootstrap 95% CI
   delta_shift.csv  macro F1 (temporal_late) minus macro F1 (random_matched), text only, bootstrap 95% CI
-  mcnemar.csv      text-only models compared on the same test posts
+  mcnemar.csv      text-only models compared on the same test posts, exact test per replicate; p_max is the
+                   largest p over replicates (the difference holds in every replicate if p_max_holm < 0.05)
 
 Bootstrap: resample test posts with replacement (1000 times, paired across the two models being compared),
 compute the metric difference for each replicate sample, average over replicates, take the 2.5 and 97.5 percentiles.
@@ -22,7 +23,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from scipy.stats import chi2, ttest_1samp
+from scipy.stats import binomtest, ttest_1samp
 
 ROOT = Path(__file__).resolve().parents[1]
 B = 1000
@@ -89,6 +90,11 @@ def mcnemar(a, b):
     return int((ra & ~rb).sum()), int((~ra & rb).sum())
 
 
+def mcnemar_p(n01, n10):
+    """Exact two-sided McNemar p-value: a binomial test on the posts only one of the two models gets right."""
+    return float(binomtest(n01, n01 + n10).pvalue) if n01 + n10 else 1.0
+
+
 def load_preds(pred_dir):
     runs = {}
     for f in pred_dir.glob("*.npz"):
@@ -143,22 +149,28 @@ def main(source):
             rows.append({"model": model, **delta_row(boot, [f1(a) - f1(b) for a, b in both])})
     finish_delta(rows).to_csv(final / "delta_shift.csv", index=False)
 
-    # 4. McNemar between text-only models, pooled over replicates
+    # 4. McNemar between text-only models, one exact test per replicate
+    # Counts are not pooled: temporal_late has the same test posts in every replicate, so pooling counts each post five times.
     rows = []
     models = sorted({key[0] for key in runs})
     for split in sorted({key[2] for key in runs}):
         for i, m1 in enumerate(models):
             for m2 in models[i + 1:]:
-                n01 = n10 = 0
+                counts = []
                 for r in reps:
                     ka, kb = (m1, "text", split, r), (m2, "text", split, r)
                     if ka in runs and kb in runs and np.array_equal(runs[ka]["id"], runs[kb]["id"]):
-                        a, b = mcnemar(runs[ka], runs[kb])
-                        n01, n10 = n01 + a, n10 + b
-                if n01 + n10:
-                    stat = (abs(n01 - n10) - 1) ** 2 / (n01 + n10)
-                    rows.append({"split": split, "model_a": m1, "model_b": m2, "only_a_right": n01, "only_b_right": n10, "chi2": stat, "p_value": chi2.sf(stat, 1)})
-    pd.DataFrame(rows).round(6).to_csv(final / "mcnemar.csv", index=False)
+                        counts.append(mcnemar(runs[ka], runs[kb]))
+                if counts:
+                    p = [mcnemar_p(n01, n10) for n01, n10 in counts]
+                    rows.append({"split": split, "model_a": m1, "model_b": m2, "n_reps": len(counts),
+                                 "only_a_right": sum(c[0] for c in counts), "only_b_right": sum(c[1] for c in counts),
+                                 "reps_a_better": sum(n01 > n10 and q < 0.05 for (n01, n10), q in zip(counts, p)),
+                                 "reps_b_better": sum(n10 > n01 and q < 0.05 for (n01, n10), q in zip(counts, p)),
+                                 "p_median": float(np.median(p)), "p_max": max(p)})
+    df = pd.DataFrame(rows)
+    df["p_max_holm"] = holm(df.p_max.values)
+    df.round(6).to_csv(final / "mcnemar.csv", index=False)
 
     for name in ["summary", "delta_time", "delta_shift", "mcnemar"]:
         print(f"\n== {name}\n", pd.read_csv(final / f"{name}.csv").to_string(index=False))
