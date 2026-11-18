@@ -2,11 +2,11 @@
 
 | Presenter | Slides |
 |---|---|
-| Abhinav | 1, 2, 3, 4, 5 |
-| Xing | 6, 7, 8 |
-| Jaskamal | 9, 10 |
-| Sudesh | 11, 12, 13, 14 |
-| Zohaib | 15, 16, 17, 18 |
+| Abhinav | 1, 2, 3, 4, 16, 17, 18 |
+| Xing | 5, 6, 7, 8 |
+| Jaskamal | 9 |
+| Sudesh | 10, 11, 12, 13, 14 |
+| Zohaib | 15 |
 
 General tips: face the audience, not the screen. Point at one thing at a time. Say what the picture shows before what it means. Never read a whole table aloud.
 
@@ -38,16 +38,16 @@ General tips: face the audience, not the screen. Point at one thing at a time. S
 - Anchor paper claims 0.7222 to 0.7376 by adding posting time.
 - One run, no strong baseline, no code.
 - Our two questions: does timing really help, and do models still work on later posts?
+- Hand over: 'Xing will take you through how the study works and the data.'
 
 *How to show the visual:* Point at 0.7222 then 0.7376 and say: one and a half points, from one run. Then point to the right card for our two questions.
 
-## Slide 5: How the study works (Abhinav)
+## Slide 5: How the study works (Xing)
 
 - Follow the arrows: Kaggle data, cleaning, stratified sample, splits.
 - Same data goes into three models.
 - Orange box is the experiment: text only vs text + time, nothing else changes.
 - Then we score everything the same way, with confidence intervals.
-- Hand over: 'Xing will now take you through the data.'
 
 *How to show the visual:* Trace the arrows with your hand: top row left to right, down to the orange box, then the three models, then the bottom box. Stop on orange: this is the one thing we change.
 
@@ -75,7 +75,7 @@ General tips: face the audience, not the screen. Point at one thing at a time. S
 - Score barely moved, 0.620 vs 0.624, because leakage was only about 3% of posts.
 - So cleaning is insurance: it proves the score is honest.
 - Stratified and plain random sampling score the same; class-balanced is worse (0.607).
-- Hand over: 'Jaskamal will explain the three methods.'
+- Hand over: 'Jaskamal will introduce the three methods.'
 
 *How to show the visual:* Left table: point at full cleaning (0.620) and no leakage control (0.620): almost the same. Right table: point at class balanced (0.607), the only lower one. Then read the sentence below.
 
@@ -85,16 +85,16 @@ General tips: face the audience, not the screen. Point at one thing at a time. S
 - B: MentalRoBERTa, a language model pretrained on mental-health Reddit.
 - C: the anchor paper's BiLSTM with attention, rebuilt from its equations.
 - Each one trained twice: text only and text + time.
+- Hand over: 'Sudesh will show the results and what they mean.'
 
 *How to show the visual:* Point at the A, B and C circles in order. For each, say what it is and the 'Why' line.
 
-## Slide 10: All three methods side by side (Jaskamal)
+## Slide 10: All three methods side by side (Sudesh)
 
 - Same posts, later-period test, text only.
 - MentalRoBERTa is best: accuracy 0.78, macro F1 0.68.
-- Method A (mine) 0.74 accuracy, 0.64 macro F1, close behind for a much simpler model.
+- Method A 0.74 accuracy, 0.64 macro F1, close behind for a much simpler model.
 - Macro F1 is lower than accuracy because the small classes are harder.
-- Hand over: 'Sudesh will compare us with the paper and test timing.'
 
 *How to show the visual:* Point at the MentalRoBERTa row first (numbers in teal): it is best on every column. Then compare A, then C.
 
@@ -129,7 +129,7 @@ General tips: face the audience, not the screen. Point at one thing at a time. S
 - Later-period vs same-size random: about 0 for all three models.
 - So models did not get worse on later posts in these months.
 - The chart: three classes only start in Nov 2021. That is why the paper's 2021 to 2022 split is misleading.
-- Hand over: 'Zohaib will show what the model looks at and wrap up.'
+- Hand over: 'Zohaib will show what the model actually looks at.'
 
 *How to show the visual:* On the chart, point at Nov 2021 where the colours suddenly change: three classes appear only from then. On the right card, read one number: all near zero.
 
@@ -140,10 +140,11 @@ General tips: face the audience, not the screen. Point at one thing at a time. S
 - No subreddit names, so the leakage removal worked.
 - Main mistakes go into depression: 35% of mentalillness and 18% of bpd posts.
 - For a moderator, showing these words is a simple explanation of a flag.
+- Hand over: 'Back to Abhinav for what we found.'
 
 *How to show the visual:* Left table: pick two rows (bipolar: lamictal, schizophrenia: voices) instead of reading all six. Right card: read the two big percentages.
 
-## Slide 16: What we found (Zohaib)
+## Slide 16: What we found (Abhinav)
 
 - One: timing is not a reliable signal.
 - Two: the choice of text model matters far more.
@@ -152,12 +153,12 @@ General tips: face the audience, not the screen. Point at one thing at a time. S
 
 *How to show the visual:* Count on your fingers 1 to 4 and read only the bold lines; the grey lines are for questions.
 
-## Slide 17: Team and responsibilities (Zohaib)
+## Slide 17: Team and responsibilities (Abhinav)
 
-- Each of us owns one part: Abhinav (coordination, Methods B and C), Xing (data), Jaskamal (Method A), Sudesh (statistics and paper comparison), me (explanations).
+- Each of us owns one part: me (coordination, Methods B and C), Xing (data and study design), Jaskamal (Method A), Sudesh (statistics, results and paper comparison), Zohaib (explanations).
 - Everyone reviewed papers. Phase II is shared.
 
-## Slide 18: Limits, and what comes next (Zohaib)
+## Slide 18: Limits, and what comes next (Abhinav)
 
 - Limits: labels are subreddits, condition names stay in the text, no author column, short time window.
 - Phase II: a triage assistant for moderators, with explanations, where a human always decides.
