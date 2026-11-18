@@ -1,0 +1,132 @@
+# Speaker script: who says what
+
+| Presenter | Slides |
+|---|---|
+| Abhinav | 1, 2, 4, 5, 12, 14, 16 |
+| Xing | 6, 7, 8 |
+| Jaskamal | 9, 11 |
+| Sudesh | 3, 10, 13 |
+| Zohaib | 15, 17, 18 |
+
+## Slide 1: Title (Abhinav)
+
+- Hi, we are Group 2. Our project: Does Timing Matter?
+- Introduce the team in one line each (names on the slide).
+- Domain: healthcare, mental health on Reddit.
+
+## Slide 2: Why this problem matters (Abhinav)
+
+- Millions live with depression and anxiety (read the three numbers).
+- Many people write about distress online before seeing anyone.
+- Moderators cannot read every post, so AI can help them sort.
+- Key point: AI supports a human, it never diagnoses.
+
+## Slide 3: Five core papers and the gap (Sudesh)
+
+- Each of us reviewed papers; these are the five core ones.
+- Walk the table quickly: anchor paper, Low (simple baseline), Cohan (low recall), Kumar (time as post order), eRisk (recall alone misleads).
+- Gap: nobody checked if timing helps against a strong text model, with repeated runs and a proper later-period test.
+
+## Slide 4: A paper says timing helps. We checked. (Abhinav)
+
+- Anchor paper claims 0.7222 to 0.7376 by adding posting time.
+- One run, no strong baseline, no code.
+- Our two questions: does timing really help, and do models still work on later posts?
+
+## Slide 5: How the study works (Abhinav)
+
+- Follow the arrows: Kaggle data, cleaning, stratified sample, splits.
+- Same data goes into three models.
+- Orange box is the experiment: text only vs text + time, nothing else changes.
+- Then we score everything the same way, with confidence intervals.
+
+## Slide 6: The data, and what we removed first (Xing)
+
+- 701,787 Reddit posts from 6 subreddits; the label is the subreddit, not a diagnosis.
+- After cleaning: 483,715 posts from 2021 and 2022.
+- Leakage = the model cheating. We removed subreddit mentions, cross-posts with two labels, and duplicates.
+- Everything is learned from training data only.
+
+## Slide 7: Splits and metrics (Xing)
+
+- Random split is the paper's setup.
+- Same-size random has the training size of the time split, so a drop can only come from time.
+- Later period: train Nov 2021 to Jun 2022, test Aug to Nov 2022.
+- Main metric macro F1, so small classes like schizophrenia (4%) count as much as big ones.
+
+## Slide 8: Do leakage removal and stratification matter? (Xing)
+
+- We tested it: turned each cleaning step off.
+- Score barely moved, 0.620 vs 0.624, because leakage was only about 3% of posts.
+- So cleaning is insurance: it proves the score is honest.
+- Stratified and plain random sampling score the same; class-balanced is worse (0.607).
+
+## Slide 9: Three methods, same data and splits (Jaskamal)
+
+- A: TF-IDF + logistic regression. Words become scores, the model learns which words point to which class. Simple and strong.
+- B: MentalRoBERTa, a language model pretrained on mental-health Reddit.
+- C: the anchor paper's BiLSTM with attention, rebuilt from its equations.
+- Each one trained twice: text only and text + time.
+
+## Slide 10: Reproducing the anchor paper (Sudesh)
+
+- No code was released, so we rebuilt their model from the paper.
+- Text only we match them: 0.730 vs their 0.722.
+- But adding time gives no gain: 0.730 vs 0.730, they reported +0.015.
+- Possible reasons are all logged in our decision log.
+
+## Slide 11: All three methods side by side (Jaskamal)
+
+- Same posts, later-period test, text only.
+- MentalRoBERTa is best: accuracy 0.78, macro F1 0.68.
+- Method A (mine) 0.74 accuracy, 0.64 macro F1, close behind for a much simpler model.
+- Macro F1 is lower than accuracy because the small classes are harder.
+
+## Slide 12: Better text model helps. Timing does not. (Abhinav)
+
+- Dark bars: text only. Orange: text + time.
+- Changing the model moves the score by up to 7 points.
+- Adding time moves it by under 2 points, and for the best model by zero.
+
+## Slide 13: Does timing help? Almost never (Sudesh)
+
+- Each cell: change from adding time, with a 95% interval.
+- If the interval includes 0, there is no real effect. That is most cells.
+- Orange: time made TF-IDF worse. Green: tiny gain for the BiLSTM only, half a point.
+- Time alone scores 0.15, the same as guessing.
+
+## Slide 14: Later posts cost nothing (Abhinav)
+
+- Later-period vs same-size random: about 0 for all three models.
+- So models did not get worse on later posts in these months.
+- The chart: three classes only start in Nov 2021. That is why the paper's 2021 to 2022 split is misleading.
+
+## Slide 15: What the model looks at (Zohaib)
+
+- We can read which words Method A relies on for each class.
+- Mostly condition names, medications (lamictal), symptoms (voices) and therapy (dbt).
+- No subreddit names, so the leakage removal worked.
+- Main mistakes go into depression: 35% of mentalillness and 18% of bpd posts.
+- For a moderator, showing these words is a simple explanation of a flag.
+
+## Slide 16: What we found (Abhinav)
+
+- One: timing is not a reliable signal.
+- Two: the choice of text model matters far more.
+- Three: later posts were not harder here.
+- Four: the paper's split is confounded by how the data was collected.
+
+## Slide 17: Team and responsibilities (Zohaib)
+
+- Each of us owns one part: data (Xing), Method A (Jaskamal), statistics and paper comparison (Sudesh), explanations (me), Methods B and C and coordination (Abhinav).
+- Everyone reviewed papers. Phase II is shared.
+
+## Slide 18: Limits, and what comes next (Zohaib)
+
+- Limits: labels are subreddits, condition names stay in the text, no author column, short time window.
+- Phase II: a triage assistant for moderators, with explanations, where a human always decides.
+- Thank you, happy to take questions.
+
+## Slide 19: References (-)
+
+- Leave on screen during questions.

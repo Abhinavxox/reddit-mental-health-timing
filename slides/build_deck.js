@@ -1,4 +1,4 @@
-// node build_deck.js  -> Phase1_Timing_Matters.pptx   (numbers come from deck_data.json, made by deck_data.py)
+// node build_deck.js -> Phase1_Timing_Matters.pptx (numbers from deck_data.json). Then run: python slides/speaker_notes.py (presenters and notes)
 const pptxgen = require("pptxgenjs");
 const fs = require("fs");
 const path = require("path");
