@@ -246,6 +246,23 @@ const card = (s, x, y, w, h, name) => s.addShape(pres.ShapeType.roundRect, { x, 
   s.addText("The paper's 2021 to 2022 split is confounded: Method A with time falls to 0.25, and to 0.54 without month and day.", { x: 0.5, y: 4.3, w: 5.4, h: 0.6, fontSize: 13, color: C.text1, isTextBox: true, margin: 0 });
 }
 
+// 8b What the model looks at (Zohaib)
+{
+  const s = content("What the model looks at", "Method A gives each word a weight per class, so we can read the words it relies on most. It mostly finds people naming their condition, medications, symptoms and therapy. Errors flow into depression, the biggest class. Written up by Zohaib in phase1/results/README.md.");
+  const rows = [[hdrc("Class"), hdrc("Top words (Method A)")],
+    ["anxiety", "anxiety, anxious, panic"], ["bipolar", "bipolar, manic, lamictal"], ["bpd", "bpd, fp (favourite person), dbt"],
+    ["depression", "depression, depressed, suicide"], ["mentalillness", "mental, ocd, adhd"], ["schizophrenia", "schizophrenia, voices, delusions"]].map((r, i) => i === 0 ? r : r.map(t => ({ text: t, options: { fontSize: 12 } })));
+  s.addTable(rows, { x: 0.5, y: 1.3, w: 5.0, colW: [1.6, 3.4], rowH: 0.42, border: { type: "solid", color: "D5DCE4", pt: 0.5 }, color: "1B2A41", valign: "middle" });
+  card(s, 5.8, 1.3, 3.7, 3.5, "confusion card");
+  s.addText("Most common mistakes", { x: 6.0, y: 1.45, w: 3.3, h: 0.35, fontSize: 15, bold: true, color: C.text1, isTextBox: true, margin: 0 });
+  s.addText("35%", { x: 6.0, y: 1.9, w: 3.3, h: 0.55, fontFace: "Cambria", fontSize: 28, bold: true, color: C.accent2, isTextBox: true, margin: 0 });
+  s.addText("of mentalillness posts are taken for depression", { x: 6.0, y: 2.45, w: 3.3, h: 0.45, fontSize: 12, color: C.text1, isTextBox: true, margin: 0 });
+  s.addText("18%", { x: 6.0, y: 3.0, w: 3.3, h: 0.55, fontFace: "Cambria", fontSize: 28, bold: true, color: C.accent2, isTextBox: true, margin: 0 });
+  s.addText("of bpd posts are taken for depression", { x: 6.0, y: 3.55, w: 3.3, h: 0.45, fontSize: 12, color: C.text1, isTextBox: true, margin: 0 });
+  s.addText("When unsure, the model picks the biggest class.", { x: 6.0, y: 4.1, w: 3.3, h: 0.55, fontSize: 12, color: C.accent3, isTextBox: true, margin: 0 });
+  s.addText("No subreddit names in the top words, so the leakage removal worked. Labels are communities, not diagnoses.", { x: 0.5, y: 4.4, w: 5.0, h: 0.6, fontSize: 12, color: C.accent3, isTextBox: true, margin: 0 });
+}
+
 // 9 Verdict
 {
   const s = pres.addSlide({ masterName: "DARK" });
