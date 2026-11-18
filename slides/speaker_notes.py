@@ -7,25 +7,113 @@ from pptx.dml.color import RGBColor
 
 HERE = Path(__file__).parent
 S = [
- ('Abhinav', 'Title', ['Hi, we are Group 2. Our project: Does Timing Matter?', 'Introduce the team in one line each (names on the slide).', 'Domain: healthcare, mental health on Reddit.']),
- ('Abhinav', 'Why this problem matters', ['Millions live with depression and anxiety (read the three numbers).', 'Many people write about distress online before seeing anyone.', 'Moderators cannot read every post, so AI can help them sort.', 'Key point: AI supports a human, it never diagnoses.']),
- ('Abhinav', 'Five core papers and the gap', ['Each of us reviewed papers; these are the five core ones (the reviewer is in brackets).', 'Walk the table quickly: anchor paper, Low (simple baseline), Cohan (low recall), Kumar (time as post order), eRisk (recall alone misleads).', 'Gap: nobody checked if timing helps against a strong text model, with repeated runs and a proper later-period test.']),
- ('Abhinav', 'A paper says timing helps. We checked.', ['Anchor paper claims 0.7222 to 0.7376 by adding posting time.', 'One run, no strong baseline, no code.', 'Our two questions: does timing really help, and do models still work on later posts?', "Hand over: 'Xing will take you through how the study works and the data.'"]),
- ('Xing', 'How the study works', ['Follow the arrows: Kaggle data, cleaning, stratified sample, splits.', 'Same data goes into three models.', 'Orange box is the experiment: text only vs text + time, nothing else changes.', 'Then we score everything the same way, with confidence intervals.']),
- ('Xing', 'The data, and what we removed first', ['701,787 Reddit posts from 6 subreddits; the label is the subreddit, not a diagnosis.', 'After cleaning: 483,715 posts from 2021 and 2022.', 'Leakage = the model cheating. We removed subreddit mentions, cross-posts with two labels, and duplicates.', 'Everything is learned from training data only.']),
- ('Xing', 'Splits and metrics', ["Random split is the paper's setup.", 'Same-size random has the training size of the time split, so a drop can only come from time.', 'Later period: train Nov 2021 to Jun 2022, test Aug to Nov 2022.', 'Main metric macro F1, so small classes like schizophrenia (4%) count as much as big ones.']),
- ('Xing', 'Do leakage removal and stratification matter?', ['We tested it: turned each cleaning step off.', 'Score barely moved, 0.620 vs 0.624, because leakage was only about 3% of posts.', 'So cleaning is insurance: it proves the score is honest.', 'Stratified and plain random sampling score the same; class-balanced is worse (0.607).', "Hand over: 'Jaskamal will introduce the three methods.'"]),
- ('Jaskamal', 'Three methods, same data and splits', ['A: TF-IDF + logistic regression. Words become scores, the model learns which words point to which class. Simple and strong.', 'B: MentalRoBERTa, a language model pretrained on mental-health Reddit.', "C: the anchor paper's BiLSTM with attention, rebuilt from its equations.", 'Each one trained twice: text only and text + time.', "Hand over: 'Sudesh will show the results and what they mean.'"]),
- ('Sudesh', 'All three methods side by side', ['Same posts, later-period test, text only.', 'MentalRoBERTa is best: accuracy 0.78, macro F1 0.68.', 'Method A 0.74 accuracy, 0.64 macro F1, close behind for a much simpler model.', 'Macro F1 is lower than accuracy because the small classes are harder.']),
- ('Sudesh', 'Reproducing the anchor paper', ['No code was released, so we rebuilt their model from the paper.', 'Text only we match them: 0.730 vs their 0.722.', 'But adding time gives no gain: 0.730 vs 0.730, they reported +0.015.', 'Possible reasons are all logged in our decision log.']),
- ('Sudesh', 'Better text model helps. Timing does not.', ['Dark bars: text only. Orange: text + time.', 'Changing the model moves the score by up to 7 points.', 'Adding time moves it by under 2 points, and for the best model by zero.']),
- ('Sudesh', 'Does timing help? Almost never', ['Each cell: change from adding time, with a 95% interval.', 'If the interval includes 0, there is no real effect. That is most cells.', 'Orange: time made TF-IDF worse. Green: tiny gain for the BiLSTM only, half a point.', 'Time alone scores 0.15, the same as guessing.']),
- ('Sudesh', 'Later posts cost nothing', ['Later-period vs same-size random: about 0 for all three models.', 'So models did not get worse on later posts in these months.', "The chart: three classes only start in Nov 2021. That is why the paper's 2021 to 2022 split is misleading.", "Hand over: 'Zohaib will show what the model actually looks at.'"]),
- ('Zohaib', 'What the model looks at', ['We can read which words Method A relies on for each class.', 'Mostly condition names, medications (lamictal), symptoms (voices) and therapy (dbt).', 'No subreddit names, so the leakage removal worked.', 'Main mistakes go into depression: 35% of mentalillness and 18% of bpd posts.', 'For a moderator, showing these words is a simple explanation of a flag.', "Hand over: 'Back to Abhinav for what we found.'"]),
- ('Abhinav', 'What we found', ['One: timing is not a reliable signal.', 'Two: the choice of text model matters far more.', 'Three: later posts were not harder here.', "Four: the paper's split is confounded by how the data was collected."]),
- ('Abhinav', 'Team and responsibilities', ['Each of us owns one part: me (coordination, Methods B and C), Xing (data and study design), Jaskamal (Method A), Sudesh (statistics, results and paper comparison), Zohaib (explanations).', 'Everyone reviewed papers. Phase II is shared.']),
- ('Abhinav', 'Limits, and what comes next', ['Limits: labels are subreddits, condition names stay in the text, no author column, short time window.', 'Phase II: a triage assistant for moderators, with explanations, where a human always decides.', 'Thank you, happy to take questions.']),
- ('-', 'References', ['Leave on screen during questions.']),
+ ("Sudesh", "Title", [
+  "Good morning everyone. We are Group 2, and our project is called Does Timing Matter?",
+  "Our domain is healthcare, specifically mental health on Reddit.",
+  "On the slide you can see our team: Abhinav, me, Jaskamal, Zohaib and Xing. Each of us will present the part we worked on."]),
+ ("Sudesh", "Why this problem matters", [
+  "First, why this problem matters. In these three boxes we have figures from the World Health Organization.",
+  "About 280 million people live with depression, 301 million with anxiety disorders, and there were 727 thousand suicide deaths in 2021.",
+  "Below, on the left, we have who this is for: moderators and peer supporters of online communities. They read far more posts than they can handle.",
+  "On the right, why AI: the signal is in the text and there is too much to read by hand. So AI can help sort and flag posts, but a human always decides. It never diagnoses."]),
+ ("Sudesh", "Five core papers and the gap", [
+  "Our group reviewed ten papers. In this table we have the five core ones, with the person who reviewed each one in brackets.",
+  "For each paper you can see the approach, the main finding and the limitation.",
+  "The first row is our anchor paper, Saeed and Ahmed. They added posting time to a BiLSTM and got 1.5 points more F1, but from one run, with no strong baseline and no code.",
+  "Low et al. gave us our simple baseline, TF-IDF with a linear model. Cohan et al. showed these models find few of the positive cases. Kumar et al. used time as the order of a user's posts, not as a timestamp. And eRisk showed that high recall alone can be misleading.",
+  "The orange line at the bottom is the gap: nobody checked whether timing still helps against a strong text model, with repeated runs and a proper later-period test."]),
+ ("Sudesh", "A paper says timing helps. We checked.", [
+  "So here is the claim. On the left you see the two numbers from the anchor paper: 0.7222 with text only, and 0.7376 when they add posting time.",
+  "That is about one and a half points, from a single run, with no released code.",
+  "On the right we have our research question in two parts. First, do posting-time features really improve classification over a strong text-only model? Second, how much does each method lose when trained on earlier posts and tested on later ones?",
+  "Hand over: Xing will now explain how we set up the study and the data."]),
+ ("Xing", "How the study works", [
+  "Thank you. This diagram shows how the whole study works, from left to right.",
+  "In the top row, we start with the Kaggle Reddit data, 701,787 posts. Then we clean it and remove leakage. Then we take a stratified sample of 60,000 posts, five separate times. Then we make our splits.",
+  "In the middle row, the same data goes into all three models: A, B and C.",
+  "The orange box is the key part of the experiment. Each model is trained twice, once with text only and once with text plus time. Nothing else changes.",
+  "At the bottom, every model is scored the same way: macro F1, weighted F1 and accuracy, with confidence intervals and a McNemar test."]),
+ ("Xing", "The data, and what we removed first", [
+  "Now the data. On the left you see the two big numbers: we started with 701,787 posts and ended with 483,715 clean posts from 2021 and 2022.",
+  "The data comes from six subreddits: depression, anxiety, bipolar, BPD, schizophrenia and mentalillness. The label is the subreddit, so it is a community, not a medical diagnosis.",
+  "On the right are the five steps we took, numbered one to five.",
+  "One, we removed subreddit mentions like r/depression or this sub, because the post would be naming its own label. 6,741 posts had one.",
+  "Two, we dropped texts posted under two different labels, because they have two right answers.",
+  "Three, we dropped duplicates, so the same post can never be in both training and test.",
+  "Four, we took a stratified sample by class and month, so the sample looks like the full data.",
+  "And five, everything the model learns, like the vocabulary and the settings, is fitted on the training data only."]),
+ ("Xing", "Splits and metrics", [
+  "Next, how we split the data and how we score it.",
+  "In this table we have our three main splits. The random split is the paper's own setup: 43,200 posts to train and 12,000 to test.",
+  "The same-size random split is random too, but with the training set cut to 24,732 posts, the same size as our time split. That way, if the time split scores lower, we know it is because of time and not because of less data.",
+  "The later-period split trains on November 2021 to June 2022 and tests on August to November 2022.",
+  "On the right are our metrics. Our main one is macro F1, because it counts every class equally. Schizophrenia is only 4 percent of posts and anxiety is 33 percent, so with plain accuracy a model could ignore the small classes and still look good.",
+  "We also report weighted F1 and accuracy to compare with the paper, plus a 95 percent bootstrap interval to check if a difference is real, and McNemar to compare two models on the same posts."]),
+ ("Xing", "Do leakage removal and stratification matter?", [
+  "Finally for my part, we tested whether our cleaning and sampling actually changed the results.",
+  "In the left table we turned each cleaning step off. With full cleaning the macro F1 is 0.620, and with no leakage control at all it is also 0.620. Keeping subreddit mentions gives 0.624. So the score barely moves.",
+  "That is because leakage was rare, about 3 percent of posts. So the cleaning is insurance: it proves our scores are honest.",
+  "In the right table we compared sampling methods on the same test set. Stratified and plain random both give about 0.623. A class-balanced sample is lower, 0.607, because it hides the real class mix.",
+  "Hand over: Jaskamal will now introduce the three methods."]),
+ ("Jaskamal", "Three methods, same data and splits", [
+  "Thank you. Here we have the three methods we compared.",
+  "A is TF-IDF with logistic regression. B is MentalRoBERTa. C is the anchor paper's BiLSTM with attention.",
+  "Each one was trained with text only and with text plus time.",
+  "ABHINAV ADDS: A turns each post into word scores, and logistic regression learns which words point to which class. It is the classic baseline from Low et al. B is a language model pretrained on mental-health Reddit, which we fine-tuned on Colab, because that is the strong model the paper never compared with. C is the paper's own model. They released no code, so we rebuilt it from the equations in the paper."]),
+ ("Jaskamal", "All three methods side by side", [
+  "This table shows all three methods on the same later-period test, with text only.",
+  "The row with the numbers in teal is MentalRoBERTa. It is the best on all three scores: accuracy 0.782 and macro F1 0.679.",
+  "Method A gets 0.741 accuracy and 0.636 macro F1, and the BiLSTM 0.733 and 0.608.",
+  "ABHINAV ADDS: macro F1 is lower than accuracy because the small classes are harder. Random guessing gives 0.145. MentalRoBERTa is better than both others on the same posts, with a McNemar p-value under 0.001.",
+  "Hand over: Abhinav will now go through the results."]),
+ ("Abhinav", "Reproducing the anchor paper", [
+  "So first, did we reproduce the anchor paper?",
+  "In this table we compare the paper's numbers with our rebuilt BiLSTM, using weighted F1 on the random split like they did.",
+  "With text only, they got 0.722 and we got 0.730, so our rebuild matches their level.",
+  "With text plus time, they got 0.738, but we got 0.730 again.",
+  "The last row is the key one: they report a gain of 0.015 from time, and we see minus 0.001, so no gain.",
+  "On the right: since no code was released, every design choice we had to make is written in our decision log. Our goal was to match within 3 points or explain the gap, and we met it."]),
+ ("Abhinav", "Better text model helps. Timing does not.", [
+  "This chart shows macro F1 on the later-period test.",
+  "For each model, the dark bar is text only and the orange bar is text plus time.",
+  "As you can see, each pair is almost the same height. Adding time barely changes anything.",
+  "But moving from one model to another makes a much bigger difference: MentalRoBERTa is about four points above TF-IDF and seven above the BiLSTM.",
+  "On the right we have the gain from adding time: minus 0.015 for A, minus 0.002 for B, and plus 0.006 for C."]),
+ ("Abhinav", "Does timing help? Almost never", [
+  "This table gives the full picture, for every model and every split.",
+  "Each cell is the change in macro F1 when we add time, with the 95 percent interval in brackets. If the interval includes zero, there is no real effect.",
+  "The white cells are no effect, and that is most of them.",
+  "The orange cells show where time actually made TF-IDF worse, for example minus 0.015 on the later period.",
+  "The green cells are the only gains, for the BiLSTM, and they are about half a point.",
+  "MentalRoBERTa was not run on the random split because of our free GPU limit.",
+  "And at the bottom: time alone scores 0.15, which is the same as random guessing."]),
+ ("Abhinav", "Later posts cost nothing", [
+  "Now the second part of our question: do models get worse on later posts?",
+  "On the right we compare the later-period test with the same-size random test. The difference is minus 0.001, plus 0.008 and minus 0.001, and every interval includes zero. So no measurable loss.",
+  "The chart on the left explains an important finding. It shows the share of each class per month. Look at November 2021: the colours suddenly change, because three classes only start appearing from then.",
+  "That means the paper's 2021 to 2022 split is not testing language change, it is testing a change in how the data was collected. When we used it, adding month features dropped Method A to 0.25.",
+  "Hand over: Zohaib will now show what the model actually looks at."]),
+ ("Zohaib", "What the model looks at", [
+  "Thank you. Method A gives every word a weight for each class, so we can read which words it relies on.",
+  "In this table we have the top words for each class. For bipolar it is bipolar, manic and lamictal, which is a medication. For schizophrenia it is schizophrenia, voices and delusions.",
+  "So the model mostly looks for people naming their condition, their medication, symptoms or therapy. There are no subreddit names, which shows the leakage removal worked.",
+  "On the right are the most common mistakes: 35 percent of mentalillness posts and 18 percent of BPD posts are taken for depression. When the model is unsure, it picks the biggest class.",
+  "For a moderator, showing these key words is a simple way to explain why a post was flagged."]),
+ ("Zohaib", "What we found", [
+  "So, what we found, in four points.",
+  "One, timing is not a reliable signal. It gave no gain for the strongest models and a small loss for TF-IDF under time shift.",
+  "Two, the choice of model matters much more. The pretrained mental-health model beats TF-IDF by about four points.",
+  "Three, later posts were not harder within November 2021 to November 2022.",
+  "And four, the paper's split is confounded, because the class mix changes with the collection date."]),
+ ("Zohaib", "Team and responsibilities", [
+  "This table shows who was responsible for what, and the papers each of us reviewed.",
+  "Abhinav led the project and did Methods B and C. Sudesh did the statistics and the comparison with the papers. Jaskamal did Method A. I did the explanations. Xing did the data.",
+  "Everyone reviewed papers, and Phase II will be shared by the whole team."]),
+ ("Zohaib", "Limits, and what comes next", [
+  "Finally, the limits of our work, on the left. Labels are subreddits and not diagnoses. Condition names stay in the text. The Kaggle file has no authors, so we could not check same-user leakage. Method B used a smaller training set, and our time window is about nine months.",
+  "On the right is Phase II: a triage assistant for moderators, using the best model, with an explanation for each flag and an ethics plan. A human always makes the final call.",
+  "Thank you for listening. We are happy to take your questions."]),
+ ("-", "References", ["Leave on screen during questions."]),
 ]
 
 
@@ -53,23 +141,22 @@ def main():
     assert len(p.slides) == len(S), (len(p.slides), len(S))
     for slide, (who, title, cues) in zip(p.slides, S):
         tf = slide.notes_slide.notes_text_frame
-        i = list(p.slides).index(slide) + 1
-        tf.text = f"PRESENTER: {who}\n" + "\n".join("- " + c for c in cues) + (f"\nHOW TO SHOW THE VISUAL: {VISUAL[i]}" if i in VISUAL else "")
+        tf.text = f"PRESENTER: {who}\n\n" + "\n\n".join(cues)
         if who != "-":
             dark = slide.slide_layout.name == "DARK"
             tb = slide.shapes.add_textbox(Inches(0.5), Inches(5.2), Inches(3), Inches(0.3))
             tb.name = "presenter tag"
             r = tb.text_frame.paragraphs[0].add_run()
-            r.text = f"Presenter: {who}"
+            r.text = f"Presenter: {who}" + (" (with Abhinav)" if who == "Jaskamal" else "")
             r.font.size = Pt(10)
             r.font.color.rgb = RGBColor(0xCB, 0xD5, 0xE1) if dark else RGBColor(0x6C, 0x7A, 0x89)
     p.save(path)
     md = ["# Speaker script: who says what", "", "| Presenter | Slides |", "|---|---|"]
-    for who in ["Abhinav", "Xing", "Jaskamal", "Sudesh", "Zohaib"]:  # in speaking order
+    for who in ["Sudesh", "Xing", "Jaskamal", "Abhinav", "Zohaib"]:  # in speaking order
         md.append(f"| {who} | " + ", ".join(str(i + 1) for i, s in enumerate(S) if s[0] == who) + " |")
-    md += ["", "General tips: face the audience, not the screen. Point at one thing at a time. Say what the picture shows before what it means. Never read a whole table aloud.", ""]
+    md += ["", "How to use this: the notes are written as what you say. When a line says in this table or on the right, point at that part of the slide. Face the audience, not the screen. On Jaskamal's slides, Abhinav adds the detail after Jaskamal's short intro.", ""]
     for i, (who, title, cues) in enumerate(S, 1):
-        md += [f"## Slide {i}: {title} ({who})", ""] + [f"- {c}" for c in cues] + ([f"", f"*How to show the visual:* {VISUAL[i]}"] if i in VISUAL else []) + [""]
+        md += [f"## Slide {i}: {title} ({who})", ""] + [(f"**Abhinav adds:** {c[14:]}" if c.startswith("ABHINAV ADDS: ") else f"*{c}*" if c.startswith("Hand over") else c) + "\n" for c in cues] + [""]
     (HERE / "speaker_script.md").write_text("\n".join(md))
     print("notes added to", len(S), "slides")
 
