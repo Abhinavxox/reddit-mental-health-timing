@@ -28,13 +28,33 @@ S = [
  ("-", "References", ["Leave on screen during questions."]),
 ]
 
+
+VISUAL = {
+ 2: "Point at the three big numbers left to right, read each one slowly, then the two boxes below.",
+ 3: "Do not read the table. Point at one row at a time, say only the Finding and Limitation columns, then land on the orange Gap line and read it fully.",
+ 4: "Point at 0.7222 then 0.7376 and say: one and a half points, from one run. Then point to the right card for our two questions.",
+ 5: "Trace the arrows with your hand: top row left to right, down to the orange box, then the three models, then the bottom box. Stop on orange: this is the one thing we change.",
+ 6: "Start with the two big numbers (701,787 to 483,715), then walk down the numbered circles 1 to 5, one sentence each.",
+ 7: "Left table: read only the Purpose column. Right card: say macro F1 first, it is our main metric.",
+ 8: "Left table: point at full cleaning (0.620) and no leakage control (0.620): almost the same. Right table: point at class balanced (0.607), the only lower one. Then read the sentence below.",
+ 9: "Point at the A, B and C circles in order. For each, say what it is and the 'Why' line.",
+ 10: "Point at the Paper column, then Ours. The key cell is the last row: +0.015 for them, -0.001 for us.",
+ 11: "Point at the MentalRoBERTa row first (numbers in teal): it is best on every column. Then compare A, then C.",
+ 12: "Explain the colours first: dark is text only, orange is text + time. Show that each pair of bars is nearly the same height. Then point at the right card: the gain from time is near zero.",
+ 13: "Explain the colours first: white means no real effect, orange means time made it worse, green means a tiny gain. Most cells are white.",
+ 14: "On the chart, point at Nov 2021 where the colours suddenly change: three classes appear only from then. On the right card, read one number: all near zero.",
+ 15: "Left table: pick two rows (bipolar: lamictal, schizophrenia: voices) instead of reading all six. Right card: read the two big percentages.",
+ 16: "Count on your fingers 1 to 4 and read only the bold lines; the grey lines are for questions.",
+}
+
 def main():
     path = HERE / "Phase1_Timing_Matters.pptx"
     p = Presentation(path)
     assert len(p.slides) == len(S), (len(p.slides), len(S))
     for slide, (who, title, cues) in zip(p.slides, S):
         tf = slide.notes_slide.notes_text_frame
-        tf.text = f"PRESENTER: {who}\n" + "\n".join("- " + c for c in cues)
+        i = list(p.slides).index(slide) + 1
+        tf.text = f"PRESENTER: {who}\n" + "\n".join("- " + c for c in cues) + (f"\nHOW TO SHOW THE VISUAL: {VISUAL[i]}" if i in VISUAL else "")
         if who != "-":
             dark = slide.slide_layout.name == "DARK"
             tb = slide.shapes.add_textbox(Inches(0.5), Inches(5.2), Inches(3), Inches(0.3))
@@ -47,9 +67,9 @@ def main():
     md = ["# Speaker script: who says what", "", "| Presenter | Slides |", "|---|---|"]
     for who in ["Abhinav", "Xing", "Jaskamal", "Sudesh", "Zohaib"]:
         md.append(f"| {who} | " + ", ".join(str(i + 1) for i, s in enumerate(S) if s[0] == who) + " |")
-    md.append("")
+    md += ["", "General tips: face the audience, not the screen. Point at one thing at a time. Say what the picture shows before what it means. Never read a whole table aloud.", ""]
     for i, (who, title, cues) in enumerate(S, 1):
-        md += [f"## Slide {i}: {title} ({who})", ""] + [f"- {c}" for c in cues] + [""]
+        md += [f"## Slide {i}: {title} ({who})", ""] + [f"- {c}" for c in cues] + ([f"", f"*How to show the visual:* {VISUAL[i]}"] if i in VISUAL else []) + [""]
     (HERE / "speaker_script.md").write_text("\n".join(md))
     print("notes added to", len(S), "slides")
 
