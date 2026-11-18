@@ -125,7 +125,18 @@ Each one was trained with text only and with text plus time.
 **Abhinav adds:** A turns each post into word scores, and logistic regression learns which words point to which class. It is the classic baseline from Low et al. B is a language model pretrained on mental-health Reddit, which we fine-tuned on Colab, because that is the strong model the paper never compared with. C is the paper's own model. They released no code, so we rebuilt it from the equations in the paper.
 
 
-## Slide 10: All three methods side by side (Jaskamal)
+## Slide 10: Reproduction of existing methods (LIVE DEMO) (Jaskamal)
+
+This table compares the original published results with ours. The first two rows are the anchor paper's BiLSTM, which we rebuilt.
+
+ABHINAV ADDS (and runs the demo): in the terminal type  cd phase1 && python demo.py repro  . While it trains Method A live, about 50 seconds: text only we get 0.730 against their 0.722, so our rebuild matches. With time we get 0.730 against their 0.738, so their gain does not appear.
+
+**Abhinav adds:** the Low et al. and MentalBERT rows used other datasets, so they are not directly comparable. The box gives possible reasons for the gap: no code was released, so we chose embeddings and early stopping ourselves, and the paper picked its best epoch on the set it reports. Then point at the demo output: paper versus ours.
+
+*Hand over: Abhinav continues with the comparison of all three methods.*
+
+
+## Slide 11: Comparative evaluation: all three methods (Abhinav)
 
 This table shows all three methods on the same later-period test, with text only.
 
@@ -133,24 +144,7 @@ The row with the numbers in teal is MentalRoBERTa. It is the best on all three s
 
 Method A gets 0.741 accuracy and 0.636 macro F1, and the BiLSTM 0.733 and 0.608.
 
-**Abhinav adds:** macro F1 is lower than accuracy because the small classes are harder. Random guessing gives 0.145. MentalRoBERTa is better than both others on the same posts, with a McNemar p-value under 0.001.
-
-*Hand over: Abhinav will now go through the results.*
-
-
-## Slide 11: Reproducing the anchor paper (Abhinav)
-
-So first, did we reproduce the anchor paper?
-
-In this table we compare the paper's numbers with our rebuilt BiLSTM, using weighted F1 on the random split like they did.
-
-With text only, they got 0.722 and we got 0.730, so our rebuild matches their level.
-
-With text plus time, they got 0.738, but we got 0.730 again.
-
-The last row is the key one: they report a gain of 0.015 from time, and we see minus 0.001, so no gain.
-
-On the right: since no code was released, every design choice we had to make is written in our decision log. Our goal was to match within 3 points or explain the gap, and we met it.
+macro F1 is lower than accuracy because the small classes are harder. Random guessing gives 0.145. MentalRoBERTa is better than both others on the same posts, with a McNemar p-value under 0.001.
 
 
 ## Slide 12: Better text model helps. Timing does not. (Abhinav)
@@ -168,6 +162,8 @@ On the right we have the gain from adding time: minus 0.015 for A, minus 0.002 f
 
 ## Slide 13: Does timing help? Almost never (Abhinav)
 
+Run the demo first:  python demo.py extension  . It trains Method A with and without time on the later period live, about a minute, then prints the results over all replicates. Explain the table while it runs.
+
 This table gives the full picture, for every model and every split.
 
 Each cell is the change in macro F1 when we add time, with the 95 percent interval in brackets. If the interval includes zero, there is no real effect.
@@ -181,6 +177,8 @@ The green cells are the only gains, for the BiLSTM, and they are about half a po
 MentalRoBERTa was not run on the random split because of our free GPU limit.
 
 And at the bottom: time alone scores 0.15, which is the same as random guessing.
+
+At the bottom: our hypothesis that timing helps is not supported.
 
 
 ## Slide 14: Later posts cost nothing (Abhinav)
@@ -235,7 +233,7 @@ Everyone reviewed papers, and Phase II will be shared by the whole team.
 
 Finally, the limits of our work, on the left. Labels are subreddits and not diagnoses. Condition names stay in the text. The Kaggle file has no authors, so we could not check same-user leakage. Method B used a smaller training set, and our time window is about nine months.
 
-On the right is Phase II: a triage assistant for moderators, using the best model, with an explanation for each flag and an ethics plan. A human always makes the final call.
+On the right is how our findings guide Phase II: a triage assistant for moderators using the strongest text model and no time features. Each flag is explained with its key words, like lamictal or voices, and we warn that mentalillness posts are often taken for depression. A human always makes the final call.
 
 Thank you for listening. We are happy to take your questions.
 

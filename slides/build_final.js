@@ -41,7 +41,7 @@ function content(title, notes) {
 const card = (s, x, y, w, h, name) => s.addShape(pres.ShapeType.roundRect, { x, y, w, h, rectRadius: 0.08, fill: { color: C.background2 }, line: { color: "EEF2F6", width: 0 }, objectName: name });
 
 
-const demoTag = (s, cmd) => { s.addShape(pres.ShapeType.roundRect, { x: 0.5, y: 5.0, w: 3.8, h: 0.38, rectRadius: 0.08, fill: { color: "E76F51" }, line: { color: "E76F51", width: 0 }, objectName: "demo tag" }); s.addText([{ text: "LIVE DEMO  ", options: { bold: true } }, { text: cmd, options: { fontFace: "Courier New" } }], { x: 0.5, y: 5.0, w: 3.8, h: 0.38, fontSize: 11, color: "FFFFFF", align: "center", valign: "middle", isTextBox: true, margin: 2 }); };
+const demoTag = (s, cmd) => { s.addShape(pres.ShapeType.roundRect, { x: 5.2, y: 5.0, w: 3.8, h: 0.38, rectRadius: 0.08, fill: { color: "E76F51" }, line: { color: "E76F51", width: 0 }, objectName: "demo tag" }); s.addText([{ text: "LIVE DEMO  ", options: { bold: true } }, { text: cmd, options: { fontFace: "Courier New" } }], { x: 5.2, y: 5.0, w: 3.8, h: 0.38, fontSize: 11, color: "FFFFFF", align: "center", valign: "middle", isTextBox: true, margin: 2 }); };
 
 // S1 Title and team
 {

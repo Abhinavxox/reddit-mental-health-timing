@@ -32,6 +32,7 @@ const g = (m, ft, sp, col) => (D.summary.find(r => r.model === m && r.features =
 const hdrc = (t, fs = 12) => ({ text: t, options: { bold: true, color: "FFFFFF", fill: { color: "324A5F" }, fontSize: fs } });
 const box = (s, x, y, w, h, t, fill, color, name, fs = 12) => { s.addShape(pres.ShapeType.roundRect, { x, y, w, h, rectRadius: 0.08, fill: { color: fill }, line: { color: fill, width: 0 }, objectName: name }); s.addText(t, { x, y, w, h, align: "center", valign: "middle", fontSize: fs, bold: true, color, isTextBox: true, margin: 4 }); };
 const arrow = (s, x1, y1, x2, y2, name) => s.addShape(pres.ShapeType.line, { x: x1, y: y1, w: x2 - x1, h: y2 - y1, line: { color: "6C7A89", width: 1.5, endArrowType: "triangle" }, objectName: name });
+const demoTag = (s, cmd) => { s.addShape(pres.ShapeType.roundRect, { x: 5.2, y: 5.0, w: 3.8, h: 0.38, rectRadius: 0.08, fill: { color: "E76F51" }, line: { color: "E76F51", width: 0 }, objectName: "demo tag" }); s.addText([{ text: "LIVE DEMO  ", options: { bold: true } }, { text: cmd, options: { fontFace: "Courier New" } }], { x: 5.2, y: 5.0, w: 3.8, h: 0.38, fontSize: 11, color: "FFFFFF", align: "center", valign: "middle", isTextBox: true, margin: 2 }); };
 function content(title, notes) {
   const s = pres.addSlide({ masterName: "CONTENT" });
   s.addText(title, { placeholder: "title" });
@@ -52,7 +53,7 @@ const card = (s, x, y, w, h, name) => s.addShape(pres.ShapeType.roundRect, { x, 
 
 // 1b Problem and motivation
 {
-  const s = content("Why this problem matters", "Many people describe distress online before or instead of seeing a clinician. Volunteer moderators read huge volumes of posts. AI can help sort and flag, it never diagnoses. Figures are from WHO, cited in our proposal.");
+  const s = content("Problem overview and research motivation", "Many people describe distress online before or instead of seeing a clinician. Volunteer moderators read huge volumes of posts. AI can help sort and flag, it never diagnoses. Figures are from WHO, cited in our proposal.");
   [["280M", "people living with depression (WHO 2025)"], ["301M", "people with anxiety disorders, 2019 (WHO 2022)"], ["727k", "suicide deaths in 2021 (WHO 2025)"]].forEach((r, i) => {
     const x = 0.5 + i * 3.1;
     card(s, x, 1.35, 2.9, 1.6, `stat card ${i + 1}`);
@@ -67,7 +68,7 @@ const card = (s, x, y, w, h, name) => s.addShape(pres.ShapeType.roundRect, { x, 
 
 // 1c Literature and gap
 {
-  const s = content("Five core papers and the gap", "Each member reviewed papers; these five are the core. The gap: nobody tested whether timestamp features help once a strong text model and repeated, leakage-controlled, time-aware evaluation are used. Supporting papers: MentalBERT, Cao et al. bias review, Kamarudin survey, Menta, DS@GT.");
+  const s = content("Literature review and research gap", "Each member reviewed papers; these five are the core. The gap: nobody tested whether timestamp features help once a strong text model and repeated, leakage-controlled, time-aware evaluation are used. Supporting papers: MentalBERT, Cao et al. bias review, Kamarudin survey, Menta, DS@GT.");
   const rows = [[hdrc("Paper (reviewer)"), hdrc("Approach"), hdrc("Finding"), hdrc("Limitation")],
     ["Saeed & Ahmed 2025 (Abhinav)", "BiLSTM + time LSTM, attention", "+1.5 F1 from time", "one split, no transformer, no code"],
     ["Low et al. 2020 (Sudesh)", "TF-IDF + linear models", "weighted F1 0.851, COVID shift", "never tests model robustness"],
@@ -99,7 +100,7 @@ const card = (s, x, y, w, h, name) => s.addShape(pres.ShapeType.roundRect, { x, 
 
 // 2b Methodology diagram
 {
-  const s = content("How the study works", "Same data and same splits for every model. The only thing that changes in the timing test is whether time features are given. The focus of the investigation is the orange box.");
+  const s = content("Implemented research methodology", "Same data and same splits for every model. The only thing that changes in the timing test is whether time features are given. The focus of the investigation is the orange box.");
   const steps = [["Kaggle Reddit\n701,787 posts", "324A5F"], ["Clean and\nremove leakage", "324A5F"], ["Stratified 60k\nx 5 replicates", "324A5F"], ["Splits: random,\nsame-size, later", "324A5F"]];
   steps.forEach((t, i) => { box(s, 0.5 + i * 2.35, 1.4, 2.0, 0.95, t[0], t[1], "FFFFFF", `flow step ${i + 1}`); if (i < 3) arrow(s, 2.5 + i * 2.35, 1.875, 2.85 + i * 2.35, 1.875, `flow arrow ${i + 1}`); });
   arrow(s, 7.95, 2.35, 7.95, 2.75, "flow arrow down");
@@ -180,27 +181,28 @@ const card = (s, x, y, w, h, name) => s.addShape(pres.ShapeType.roundRect, { x, 
   s.addText("Each trained text-only and text + time, on the same splits. A and C: 5 replicates. B: 3 replicates on a 20k training subsample (free GPU limit).", { x: 0.5, y: 4.2, w: 9, h: 0.7, fontSize: 14, color: C.text1, isTextBox: true, margin: 0 });
 }
 
+// 5b Reproduction (demo)
+{
+  const s = content("Reproduction of existing methods");
+  demoTag(s, "python demo.py repro");
+  const rows = [[hdrc("Method (source)", 12), hdrc("Original result", 12), hdrc("Ours", 12), hdrc("Comparable?", 12)],
+    ["C BiLSTM, text only (Saeed & Ahmed)", "0.722 weighted F1", fmt(g("bilstm", "text", "random", "weighted_f1_mean")), "yes, same data"],
+    ["C BiLSTM, text + time (Saeed & Ahmed)", "0.738 weighted F1", fmt(g("bilstm", "text_time", "random", "weighted_f1_mean")), "yes, same data"],
+    ["A TF-IDF + LR (Low et al.)", "0.851 weighted F1", fmt(g("tfidf", "text", "random", "weighted_f1_mean")), "no, 15 subreddits"],
+    ["B MentalRoBERTa (Ji et al.)", "best on most of 8 benchmarks", fmt(g("roberta", "text", "temporal_late", "weighted_f1_mean")) + " (later)", "no, other datasets"]].map((r, i) => i === 0 ? r : r.map((t, j) => ({ text: t, options: { fontSize: 11, bold: j === 2 } })));
+  s.addTable(rows, { x: 0.5, y: 1.2, w: 9, colW: [3.2, 1.9, 1.3, 2.6], rowH: 0.42, border: { type: "solid", color: "D5DCE4", pt: 0.5 }, color: "1B2A41", valign: "middle" });
+  card(s, 0.5, 3.45, 9, 1.4, "discrepancy card");
+  s.addText([{ text: "Text-only level reproduced (0.730 vs 0.722). Timing gain not reproduced (+0.015 vs -0.001).", options: { bold: true, breakLine: true } },
+    { text: "Possible reasons: no code released, so we chose embeddings, stopword handling and early stopping on a separate validation set (the paper selects on its reported set); different sample. Every choice is written in our decision log.", options: {} }], { x: 0.7, y: 3.5, w: 8.6, h: 1.3, fontSize: 12, color: C.text1, valign: "middle", isTextBox: true, margin: 0 });
+}
+
 // 5c Comparative results
 {
-  const s = content("All three methods side by side", "Same posts, same splits. Later-period test, mean of replicates. MentalRoBERTa is best on every metric. Accuracy and weighted F1 are higher than macro F1 because the big classes are easier than the small ones.");
+  const s = content("Comparative evaluation: all three methods", "Same posts, same splits. Later-period test, mean of replicates. MentalRoBERTa is best on every metric. Accuracy and weighted F1 are higher than macro F1 because the big classes are easier than the small ones.");
   const rows = [[hdrc("Later-period test, text only", 13), hdrc("Accuracy", 13), hdrc("Weighted F1", 13), hdrc("Macro F1", 13)]];
   ["tfidf", "roberta", "bilstm"].forEach(m => rows.push([{ text: NAMES[m], options: { fontSize: 14, bold: true } }].concat(["accuracy_mean", "weighted_f1_mean", "macro_f1_mean"].map(c => ({ text: fmt(g(m, "text", "temporal_late", c)), options: { fontSize: 14, bold: m === "roberta", color: m === "roberta" ? "2A9D8F" : "1B2A41" } })))));
   s.addTable(rows, { x: 0.5, y: 1.4, w: 9, colW: [3.3, 1.9, 1.9, 1.9], rowH: 0.55, border: { type: "solid", color: "D5DCE4", pt: 0.5 }, color: "1B2A41", valign: "middle" });
   s.addText("Chance level: macro F1 0.145 (random guess). MentalRoBERTa beats both others on the same posts (McNemar p < 0.001). B uses 3 replicates and a 20k training subsample, A and C use 5 replicates.", { x: 0.5, y: 3.8, w: 9, h: 0.8, fontSize: 13, color: C.accent3, isTextBox: true, margin: 0 });
-}
-
-// 5b Reproduction
-{
-  const s = content("Reproducing the anchor paper", "The paper released no code, so we rebuilt Method C from its equations. Text only we match their level (0.730 against 0.722). Their gain from time does not appear (0.730 against 0.730). Possible reasons: no stopword removal, learned embeddings instead of Word2Vec, early stopping on a separate validation set, a different sample, all logged in the decision log.");
-  const rows = [[hdrc("Weighted F1, random split", 13), hdrc("Paper", 13), hdrc("Ours (C, 5 replicates)", 13)],
-    [{ text: "text only", options: { fontSize: 14 } }, { text: "0.722", options: { fontSize: 14 } }, { text: fmt(g("bilstm", "text", "random", "weighted_f1_mean")), options: { fontSize: 14, bold: true } }],
-    [{ text: "text + time", options: { fontSize: 14 } }, { text: "0.738", options: { fontSize: 14 } }, { text: fmt(g("bilstm", "text_time", "random", "weighted_f1_mean")), options: { fontSize: 14, bold: true } }],
-    [{ text: "gain from time", options: { fontSize: 14, bold: true } }, { text: "+0.015", options: { fontSize: 14, bold: true, color: "2A9D8F" } }, { text: sgn(g("bilstm", "text_time", "random", "weighted_f1_mean") - g("bilstm", "text", "random", "weighted_f1_mean")), options: { fontSize: 14, bold: true, color: "C2410C" } }]];
-  s.addTable(rows, { x: 0.5, y: 1.4, w: 5.4, colW: [2.2, 1.4, 1.8], rowH: 0.55, border: { type: "solid", color: "D5DCE4", pt: 0.5 }, color: "1B2A41", valign: "middle" });
-  card(s, 6.2, 1.4, 3.3, 3.4, "repro card");
-  s.addText("What this means", { x: 6.4, y: 1.55, w: 2.9, h: 0.35, fontSize: 15, bold: true, color: C.text1, isTextBox: true, margin: 0 });
-  s.addText([{ text: "Our rebuild reaches the paper's text-only level", options: { bullet: true, breakLine: true } }, { text: "The timing gain is not reproduced", options: { bullet: true, breakLine: true } }, { text: "No code was released, so every design choice is logged", options: { bullet: true } }], { x: 6.4, y: 2.0, w: 2.9, h: 2.6, fontSize: 13, color: C.text1, paraSpaceAfter: 8, valign: "top", isTextBox: true, margin: 0 });
-  s.addText("Objective O1 was to match the paper within 3 points or explain the gap: met.", { x: 0.5, y: 3.8, w: 5.4, h: 0.6, fontSize: 13, color: C.accent3, isTextBox: true, margin: 0 });
 }
 
 // 6 Main result chart
@@ -222,14 +224,15 @@ const card = (s, x, y, w, h, name) => s.addShape(pres.ShapeType.roundRect, { x, 
 
 // 7 Does timing help? table
 {
-  const s = content("Does timing help? Almost never", "Change in macro F1 when time features are added, with a 95 percent paired bootstrap interval. Orange is a significant drop. The only significant gains are for the weak BiLSTM and they are about half a point. The anchor paper's 0.015 gain is not reproduced. Time alone scores at chance, 0.15 against a random guess of 0.145.");
+  const s = content("Extension: does timing help? Almost never", "Change in macro F1 when time features are added, with a 95 percent paired bootstrap interval. Orange is a significant drop. The only significant gains are for the weak BiLSTM and they are about half a point. The anchor paper's 0.015 gain is not reproduced. Time alone scores at chance, 0.15 against a random guess of 0.145.");
   const hdr = o => ({ text: o, options: { bold: true, color: "FFFFFF", fill: { color: "324A5F" }, fontSize: 13 } });
   const cell = (m, sp) => { const r = dt(m, sp); if (!r) return { text: "not run", options: { fontSize: 13, color: "6C7A89" } }; const bad = r.ci_excludes_0 && r.delta_macro_f1 < 0, good = r.ci_excludes_0 && r.delta_macro_f1 > 0; return { text: `${sgn(r.delta_macro_f1)}  [${fmt(r.ci_low)}, ${fmt(r.ci_high)}]`, options: { fontSize: 13, color: bad ? "C2410C" : "1B2A41", bold: bad || good, fill: { color: bad ? "FDE8E0" : good ? "E1F3EF" : "FFFFFF" } } }; };
   const rows = [[hdr("Model"), hdr("Random split"), hdr("Same-size random"), hdr("Later period")]];
   ["tfidf", "roberta", "bilstm"].forEach(m => rows.push([{ text: NAMES[m], options: { fontSize: 13, bold: true } }, cell(m, "random"), cell(m, "random_matched"), cell(m, "temporal_late")]));
   s.addTable(rows, { x: 0.5, y: 1.35, w: 9, colW: [2.3, 2.2, 2.3, 2.2], rowH: 0.55, border: { type: "solid", color: "D5DCE4", pt: 0.5 }, color: "1B2A41", valign: "middle" });
   s.addText("Change in macro F1 from adding time features, 95% bootstrap interval. Shaded orange = significantly worse, green = significantly better.", { x: 0.5, y: 3.7, w: 9, h: 0.5, fontSize: 12, color: C.accent3, isTextBox: true, margin: 0 });
-  s.addText("Time alone predicts at chance level (0.15 vs 0.145 random guess).", { x: 0.5, y: 4.3, w: 9, h: 0.4, fontSize: 15, bold: true, color: C.text1, isTextBox: true, margin: 0 });
+  s.addText([{ text: "Hypothesis not supported. ", options: { bold: true, color: "E76F51" } }, { text: "Time alone predicts at chance (0.15 vs 0.145 random guess)." }], { x: 0.5, y: 4.15, w: 9, h: 0.4, fontSize: 15, color: C.text1, isTextBox: true, margin: 0 });
+  demoTag(s, "python demo.py extension");
 }
 
 // 8 Time shift and confound
@@ -243,7 +246,7 @@ const card = (s, x, y, w, h, name) => s.addShape(pres.ShapeType.roundRect, { x, 
     s.addText(`${NAMES[r.model].split("  ")[0]}  ${sgn(r.delta_macro_f1)}`, { x: 6.4, y: 2.1 + i * 0.75, w: 2.9, h: 0.4, fontFace: "Cambria", fontSize: 20, bold: true, color: C.accent1, isTextBox: true, margin: 0 });
     s.addText(`95% CI ${fmt(r.ci_low)} to ${fmt(r.ci_high)}, includes 0`, { x: 6.4, y: 2.5 + i * 0.75, w: 2.9, h: 0.3, fontSize: 11, color: C.accent3, isTextBox: true, margin: 0 });
   });
-  s.addText("The paper's 2021 to 2022 split is confounded: Method A with time falls to 0.25, and to 0.54 without month and day.", { x: 0.5, y: 4.3, w: 5.4, h: 0.6, fontSize: 13, color: C.text1, isTextBox: true, margin: 0 });
+  s.addText("Contribution: the paper's 2021 to 2022 split is confounded. With month features Method A falls to 0.25.", { x: 0.5, y: 4.3, w: 5.4, h: 0.6, fontSize: 13, color: C.text1, isTextBox: true, margin: 0 });
 }
 
 // 8b What the model looks at (Zohaib)
@@ -293,7 +296,7 @@ const card = (s, x, y, w, h, name) => s.addShape(pres.ShapeType.roundRect, { x, 
 
 // 10 Limits and next
 {
-  const s = content("Limits, and what comes next", "Limits are on the left. Phase II is a moderator triage assistant that uses the best model, with an ethics plan. Phase II work is shared by the whole team.");
+  const s = content("Conclusion and Phase II direction", "Limits are on the left. Phase II is a moderator triage assistant that uses the best model, with an ethics plan. Phase II work is shared by the whole team.");
   card(s, 0.5, 1.4, 4.4, 3.4, "limits card");
   s.addText("Limits", { x: 0.75, y: 1.55, w: 3.9, h: 0.4, fontSize: 18, bold: true, color: C.text1, isTextBox: true, margin: 0 });
   s.addText([
@@ -304,13 +307,13 @@ const card = (s, x, y, w, h, name) => s.addShape(pres.ShapeType.roundRect, { x, 
     { text: "Shift window is about nine months", options: { bullet: true } },
   ], { x: 0.75, y: 2.05, w: 3.9, h: 2.6, fontSize: 14, color: C.text1, paraSpaceAfter: 6, valign: "top", isTextBox: true, margin: 0 });
   card(s, 5.1, 1.4, 4.4, 3.4, "next card");
-  s.addText("Next: Phase II", { x: 5.35, y: 1.55, w: 3.9, h: 0.4, fontSize: 18, bold: true, color: C.text1, isTextBox: true, margin: 0 });
+  s.addText("Phase II: how our findings guide it", { x: 5.35, y: 1.55, w: 3.9, h: 0.4, fontSize: 16, bold: true, color: C.text1, isTextBox: true, margin: 0 });
   s.addText([
-    { text: "Moderator triage assistant using the strongest text model", options: { bullet: true, breakLine: true } },
-    { text: "Explanations for each flag", options: { bullet: true, breakLine: true } },
-    { text: "Ethics and safety report", options: { bullet: true, breakLine: true } },
-    { text: "A human always makes the final call", options: { bullet: true } },
-  ], { x: 5.35, y: 2.05, w: 3.9, h: 2.6, fontSize: 14, color: C.text1, paraSpaceAfter: 6, valign: "top", isTextBox: true, margin: 0 });
+    { text: "Moderator triage assistant with the strongest text model, no time features", options: { bullet: true, breakLine: true } },
+    { text: "Explain each flag with its key words (lamictal, voices)", options: { bullet: true, breakLine: true } },
+    { text: "Warn on the weak class: mentalillness is often taken for depression", options: { bullet: true, breakLine: true } },
+    { text: "Ethics plan; a human always makes the final call", options: { bullet: true } },
+  ], { x: 5.35, y: 2.05, w: 3.9, h: 2.6, fontSize: 13, color: C.text1, paraSpaceAfter: 6, valign: "top", isTextBox: true, margin: 0 });
 }
 
 // 11 References
