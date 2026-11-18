@@ -2,11 +2,11 @@
 
 | Presenter | Slides |
 |---|---|
-| Abhinav | 1, 2, 4, 5, 12, 14, 16 |
+| Abhinav | 1, 2, 3, 4, 5 |
 | Xing | 6, 7, 8 |
-| Jaskamal | 9, 11 |
-| Sudesh | 3, 10, 13 |
-| Zohaib | 15, 17, 18 |
+| Jaskamal | 9, 10 |
+| Sudesh | 11, 12, 13, 14 |
+| Zohaib | 15, 16, 17, 18 |
 
 General tips: face the audience, not the screen. Point at one thing at a time. Say what the picture shows before what it means. Never read a whole table aloud.
 
@@ -25,9 +25,9 @@ General tips: face the audience, not the screen. Point at one thing at a time. S
 
 *How to show the visual:* Point at the three big numbers left to right, read each one slowly, then the two boxes below.
 
-## Slide 3: Five core papers and the gap (Sudesh)
+## Slide 3: Five core papers and the gap (Abhinav)
 
-- Each of us reviewed papers; these are the five core ones.
+- Each of us reviewed papers; these are the five core ones (the reviewer is in brackets).
 - Walk the table quickly: anchor paper, Low (simple baseline), Cohan (low recall), Kumar (time as post order), eRisk (recall alone misleads).
 - Gap: nobody checked if timing helps against a strong text model, with repeated runs and a proper later-period test.
 
@@ -47,6 +47,7 @@ General tips: face the audience, not the screen. Point at one thing at a time. S
 - Same data goes into three models.
 - Orange box is the experiment: text only vs text + time, nothing else changes.
 - Then we score everything the same way, with confidence intervals.
+- Hand over: 'Xing will now take you through the data.'
 
 *How to show the visual:* Trace the arrows with your hand: top row left to right, down to the orange box, then the three models, then the bottom box. Stop on orange: this is the one thing we change.
 
@@ -74,6 +75,7 @@ General tips: face the audience, not the screen. Point at one thing at a time. S
 - Score barely moved, 0.620 vs 0.624, because leakage was only about 3% of posts.
 - So cleaning is insurance: it proves the score is honest.
 - Stratified and plain random sampling score the same; class-balanced is worse (0.607).
+- Hand over: 'Jaskamal will explain the three methods.'
 
 *How to show the visual:* Left table: point at full cleaning (0.620) and no leakage control (0.620): almost the same. Right table: point at class balanced (0.607), the only lower one. Then read the sentence below.
 
@@ -86,7 +88,17 @@ General tips: face the audience, not the screen. Point at one thing at a time. S
 
 *How to show the visual:* Point at the A, B and C circles in order. For each, say what it is and the 'Why' line.
 
-## Slide 10: Reproducing the anchor paper (Sudesh)
+## Slide 10: All three methods side by side (Jaskamal)
+
+- Same posts, later-period test, text only.
+- MentalRoBERTa is best: accuracy 0.78, macro F1 0.68.
+- Method A (mine) 0.74 accuracy, 0.64 macro F1, close behind for a much simpler model.
+- Macro F1 is lower than accuracy because the small classes are harder.
+- Hand over: 'Sudesh will compare us with the paper and test timing.'
+
+*How to show the visual:* Point at the MentalRoBERTa row first (numbers in teal): it is best on every column. Then compare A, then C.
+
+## Slide 11: Reproducing the anchor paper (Sudesh)
 
 - No code was released, so we rebuilt their model from the paper.
 - Text only we match them: 0.730 vs their 0.722.
@@ -95,16 +107,7 @@ General tips: face the audience, not the screen. Point at one thing at a time. S
 
 *How to show the visual:* Point at the Paper column, then Ours. The key cell is the last row: +0.015 for them, -0.001 for us.
 
-## Slide 11: All three methods side by side (Jaskamal)
-
-- Same posts, later-period test, text only.
-- MentalRoBERTa is best: accuracy 0.78, macro F1 0.68.
-- Method A (mine) 0.74 accuracy, 0.64 macro F1, close behind for a much simpler model.
-- Macro F1 is lower than accuracy because the small classes are harder.
-
-*How to show the visual:* Point at the MentalRoBERTa row first (numbers in teal): it is best on every column. Then compare A, then C.
-
-## Slide 12: Better text model helps. Timing does not. (Abhinav)
+## Slide 12: Better text model helps. Timing does not. (Sudesh)
 
 - Dark bars: text only. Orange: text + time.
 - Changing the model moves the score by up to 7 points.
@@ -121,11 +124,12 @@ General tips: face the audience, not the screen. Point at one thing at a time. S
 
 *How to show the visual:* Explain the colours first: white means no real effect, orange means time made it worse, green means a tiny gain. Most cells are white.
 
-## Slide 14: Later posts cost nothing (Abhinav)
+## Slide 14: Later posts cost nothing (Sudesh)
 
 - Later-period vs same-size random: about 0 for all three models.
 - So models did not get worse on later posts in these months.
 - The chart: three classes only start in Nov 2021. That is why the paper's 2021 to 2022 split is misleading.
+- Hand over: 'Zohaib will show what the model looks at and wrap up.'
 
 *How to show the visual:* On the chart, point at Nov 2021 where the colours suddenly change: three classes appear only from then. On the right card, read one number: all near zero.
 
@@ -139,7 +143,7 @@ General tips: face the audience, not the screen. Point at one thing at a time. S
 
 *How to show the visual:* Left table: pick two rows (bipolar: lamictal, schizophrenia: voices) instead of reading all six. Right card: read the two big percentages.
 
-## Slide 16: What we found (Abhinav)
+## Slide 16: What we found (Zohaib)
 
 - One: timing is not a reliable signal.
 - Two: the choice of text model matters far more.
@@ -150,7 +154,7 @@ General tips: face the audience, not the screen. Point at one thing at a time. S
 
 ## Slide 17: Team and responsibilities (Zohaib)
 
-- Each of us owns one part: data (Xing), Method A (Jaskamal), statistics and paper comparison (Sudesh), explanations (me), Methods B and C and coordination (Abhinav).
+- Each of us owns one part: Abhinav (coordination, Methods B and C), Xing (data), Jaskamal (Method A), Sudesh (statistics and paper comparison), me (explanations).
 - Everyone reviewed papers. Phase II is shared.
 
 ## Slide 18: Limits, and what comes next (Zohaib)

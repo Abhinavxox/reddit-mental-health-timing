@@ -180,6 +180,15 @@ const card = (s, x, y, w, h, name) => s.addShape(pres.ShapeType.roundRect, { x, 
   s.addText("Each trained text-only and text + time, on the same splits. A and C: 5 replicates. B: 3 replicates on a 20k training subsample (free GPU limit).", { x: 0.5, y: 4.2, w: 9, h: 0.7, fontSize: 14, color: C.text1, isTextBox: true, margin: 0 });
 }
 
+// 5c Comparative results
+{
+  const s = content("All three methods side by side", "Same posts, same splits. Later-period test, mean of replicates. MentalRoBERTa is best on every metric. Accuracy and weighted F1 are higher than macro F1 because the big classes are easier than the small ones.");
+  const rows = [[hdrc("Later-period test, text only", 13), hdrc("Accuracy", 13), hdrc("Weighted F1", 13), hdrc("Macro F1", 13)]];
+  ["tfidf", "roberta", "bilstm"].forEach(m => rows.push([{ text: NAMES[m], options: { fontSize: 14, bold: true } }].concat(["accuracy_mean", "weighted_f1_mean", "macro_f1_mean"].map(c => ({ text: fmt(g(m, "text", "temporal_late", c)), options: { fontSize: 14, bold: m === "roberta", color: m === "roberta" ? "2A9D8F" : "1B2A41" } })))));
+  s.addTable(rows, { x: 0.5, y: 1.4, w: 9, colW: [3.3, 1.9, 1.9, 1.9], rowH: 0.55, border: { type: "solid", color: "D5DCE4", pt: 0.5 }, color: "1B2A41", valign: "middle" });
+  s.addText("Chance level: macro F1 0.145 (random guess). MentalRoBERTa beats both others on the same posts (McNemar p < 0.001). B uses 3 replicates and a 20k training subsample, A and C use 5 replicates.", { x: 0.5, y: 3.8, w: 9, h: 0.8, fontSize: 13, color: C.accent3, isTextBox: true, margin: 0 });
+}
+
 // 5b Reproduction
 {
   const s = content("Reproducing the anchor paper", "The paper released no code, so we rebuilt Method C from its equations. Text only we match their level (0.730 against 0.722). Their gain from time does not appear (0.730 against 0.730). Possible reasons: no stopword removal, learned embeddings instead of Word2Vec, early stopping on a separate validation set, a different sample, all logged in the decision log.");
@@ -192,15 +201,6 @@ const card = (s, x, y, w, h, name) => s.addShape(pres.ShapeType.roundRect, { x, 
   s.addText("What this means", { x: 6.4, y: 1.55, w: 2.9, h: 0.35, fontSize: 15, bold: true, color: C.text1, isTextBox: true, margin: 0 });
   s.addText([{ text: "Our rebuild reaches the paper's text-only level", options: { bullet: true, breakLine: true } }, { text: "The timing gain is not reproduced", options: { bullet: true, breakLine: true } }, { text: "No code was released, so every design choice is logged", options: { bullet: true } }], { x: 6.4, y: 2.0, w: 2.9, h: 2.6, fontSize: 13, color: C.text1, paraSpaceAfter: 8, valign: "top", isTextBox: true, margin: 0 });
   s.addText("Objective O1 was to match the paper within 3 points or explain the gap: met.", { x: 0.5, y: 3.8, w: 5.4, h: 0.6, fontSize: 13, color: C.accent3, isTextBox: true, margin: 0 });
-}
-
-// 5c Comparative results
-{
-  const s = content("All three methods side by side", "Same posts, same splits. Later-period test, mean of replicates. MentalRoBERTa is best on every metric. Accuracy and weighted F1 are higher than macro F1 because the big classes are easier than the small ones.");
-  const rows = [[hdrc("Later-period test, text only", 13), hdrc("Accuracy", 13), hdrc("Weighted F1", 13), hdrc("Macro F1", 13)]];
-  ["tfidf", "roberta", "bilstm"].forEach(m => rows.push([{ text: NAMES[m], options: { fontSize: 14, bold: true } }].concat(["accuracy_mean", "weighted_f1_mean", "macro_f1_mean"].map(c => ({ text: fmt(g(m, "text", "temporal_late", c)), options: { fontSize: 14, bold: m === "roberta", color: m === "roberta" ? "2A9D8F" : "1B2A41" } })))));
-  s.addTable(rows, { x: 0.5, y: 1.4, w: 9, colW: [3.3, 1.9, 1.9, 1.9], rowH: 0.55, border: { type: "solid", color: "D5DCE4", pt: 0.5 }, color: "1B2A41", valign: "middle" });
-  s.addText("Chance level: macro F1 0.145 (random guess). MentalRoBERTa beats both others on the same posts (McNemar p < 0.001). B uses 3 replicates and a 20k training subsample, A and C use 5 replicates.", { x: 0.5, y: 3.8, w: 9, h: 0.8, fontSize: 13, color: C.accent3, isTextBox: true, margin: 0 });
 }
 
 // 6 Main result chart
