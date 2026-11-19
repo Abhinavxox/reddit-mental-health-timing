@@ -40,6 +40,25 @@ Weighted F1 on `random`: A text 0.741, A text + time 0.743, C text 0.730, C text
 - Labels are subreddits, not diagnoses. Condition names stay in the text (D3).
 - One run (BiLSTM, concat, rep 4) took far longer than the others because the laptop was busy. Scores are unaffected.
 
+## Comparison with the papers
+
+Only the anchor paper used this dataset and these six labels, so only that row is a reproduction. Low et al. and MentalBERT are context. A higher number in those papers is a different task.
+
+| Source | Setting | Score | Comparable with ours? |
+|---|---|---|---|
+| Saeed & Ahmed (anchor) | BiLSTM, text only, one run | weighted F1 0.7222 | Same 6 classes and the same Kaggle file. Our rebuild is 0.730 (mean of 5; replicates 0.721 to 0.739). |
+| Saeed & Ahmed (anchor) | BiLSTM, text + time, one run | weighted F1 0.7376 | Same data. Their gain of +0.015 does not appear. Ours stays 0.730. |
+| Ours, Method C | BiLSTM, text / text + time, `random` | 0.730 / 0.730 | The reproduction row. |
+| Ours, Method A | TF-IDF + LR, text / text + time, `random` | 0.741 / 0.743 | Same data as the anchor. A simpler model, slightly above their text-only score. |
+| Low et al. 2020 | TF-IDF + LIWC, linear SGD, 15 subreddits | weighted F1 0.851 | No. 15 communities, not our 6, plus LIWC features, on their full Zenodo collection. |
+| Ji et al. 2022 (MentalBERT) | MentalRoBERTa on other benchmarks | F1 93.38 (eRisk), 69.71 (CLPsych), 72.16 (SWMH) | No. Other datasets and other label sets, and those F1s are on a 0 to 100 scale. |
+
+**Anchor paper.** We report weighted F1 because their recall equals their accuracy (0.7455), which is what a weighted average does. Text-only levels are close (0.730 vs 0.7222). It is not a strict match: no code was released, so Method C is rebuilt from the equations; they report one run and we report the mean of five. The spread across our text-only replicates (0.721 to 0.739) is wider than their whole timing gain (+0.015), so that gain sits inside our run-to-run noise.
+
+**Low et al.** 0.851 is weighted F1 for telling 15 subreddits apart. We use six of those communities, word features only, and a different sample. Method A is the same family of model, which is why we cite them. 0.851 is not a number our 0.741 should be judged against.
+
+**MentalBERT.** Ji et al. publish F1 on depression, stress and suicide benchmarks. That is not six-way subreddit classification. The comparison that belongs in this study is our own fine-tune of MentalRoBERTa: weighted F1 0.765 on `random_matched` and 0.776 on `temporal_late` (macro F1 0.671 and 0.679). It beats TF-IDF and the BiLSTM, and posting time does not move it.
+
 ## What the model looks at
 
 Method A (TF-IDF + logistic regression, text only) gives each word a weight per class, so we can read off the words it relies on most (`final/top_words_random.json`) and see which classes it mixes up (`phase1/figures/fig5_confusion_A_temporal_late.png`).
