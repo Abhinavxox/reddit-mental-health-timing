@@ -175,6 +175,15 @@ It compares two models on the same posts: how many posts only model 1 got right 
 **Is a +0.005 gain for the BiLSTM real?**
 The interval excludes 0, so it is probably real, but it is half a point and only for the weakest model. On the paper's own random split it is zero. Not useful in practice.
 
+**Can we put our 0.730 next to the anchor paper's 0.7222 and 0.7376?**
+Yes. Same six classes, same Kaggle file, both weighted F1. Text only is close: 0.730 against 0.7222. With time they report 0.7376 and we stay at 0.730, so the gain does not appear. It is not a strict copy: no code was released, they report one run, and we report the mean of five.
+
+**Why is Low et al.'s 0.851 not a score we failed to reach?**
+That weighted F1 is for 15 subreddits, using TF-IDF plus LIWC, on their own collection. We use six of those communities and word features only. Same kind of model, different task.
+
+**Why not compare MentalBERT's 93 F1 with our 0.78?**
+Ji et al. report F1 on other benchmarks (eRisk, CLPsych, SWMH), on a 0 to 100 scale. Our figure is a fine-tune of MentalRoBERTa on these six classes: weighted F1 0.776 and macro F1 0.679 on the later-period test. Posting time does not move it.
+
 ---
 
 ## 6b. What the model looks at (Zohaib)
