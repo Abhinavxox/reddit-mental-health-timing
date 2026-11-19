@@ -19,3 +19,21 @@ Add one entry per week. Newest at the bottom.
 - **Technical contributions:** explored implementation requirements for TF-IDF feature extraction, logistic regression classification and evaluation metrics.
 - **Challenges:** comparing results across papers using different datasets and label sets.
 - **Next step:** prepare proposal presentation and experiment design.
+
+## Week of Oct 22, 2026
+- **Responsibilities:** Phase I proposal presentation and experimental planning.
+- **Completed work:** contributed to presentation preparation, including methodology discussion and planned evaluation strategy.
+- **GitHub contributions:** none
+- **Research contributions:** helped define how Method A would be compared with transformer and BiLSTM baselines using identical splits and metrics.
+- **Technical contributions:** outlined preprocessing, data-cleaning and evaluation requirements for Method A.
+- **Challenges:** ensuring the comparison between models would be fair and reproducible.
+- **Next step:** implement and run Method A experiments.
+
+## Week of Nov 16, 2026
+- **Responsibilities:** Method A implementation, experiment runs, reproduction study and presentation preparation.
+- **Completed work:** ran TF-IDF + Logistic Regression experiments across random and temporal splits, generated evaluation results, verified reproduction results against the anchor paper and prepared slides 9-10 for the final presentation.
+- **GitHub contributions:** committed updates related to Method A experiments and reporting.
+- **Research contributions:** found that TF-IDF + Logistic Regression remained competitive with the rebuilt BiLSTM and showed little benefit from time features
+- **Technical contributions:** worked on experiment execution using run, result generation and evaluation workflows.
+- **Challenges:** reproducing published results under different sampling and time-split conditions while maintaining consistency across experiments.
+- **Next step:** deliver slides 9-10 during the final presentation and support demo activities
